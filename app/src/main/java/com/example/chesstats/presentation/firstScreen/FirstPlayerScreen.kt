@@ -19,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +41,9 @@ import coil3.compose.AsyncImage
 fun FirstPlayerScreen(
     hiltViewModel: FirstScreenViewModel
 ) {
+
+    val player by hiltViewModel.player.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -103,7 +107,7 @@ fun FirstPlayerScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
-                model = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/FIDE_World_FR_Chess_Championship_2019_-_Magnus_Carlsen_%28cropped1%29.jpg/800px-FIDE_World_FR_Chess_Championship_2019_-_Magnus_Carlsen_%28cropped1%29.jpg",
+                model = player?.profileImage,
                 contentDescription = "Profile Image",
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
@@ -113,12 +117,34 @@ fun FirstPlayerScreen(
 
             EditSpacer()
 
-            Text(
-                "Magnus Carlsen",
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                color = Color.White
-            )
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    player?.name ?: "",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.White
+                )
+
+
+
+                if (player?.title != null){
+                    EditSpacer()
+
+                    Text(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(5.dp))
+                            .background(Color(0XFFA62934))
+                            .padding(vertical = 2.dp, horizontal = 5.dp),
+                        text = player?.title ?: "",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.White,
+                    )
+                }
+            }
 
             EditSpacer()
 
@@ -129,23 +155,19 @@ fun FirstPlayerScreen(
             ) {
                 Column {
                     TextRating("Blitz")
-                    TextRating("2900")
-                }
+                    TextRating(player?.eloStats?.lastBlitz.toString()) }
 
                 Column {
                     TextRating("Rapid")
-                    TextRating("3200")
-                }
+                    TextRating(player?.eloStats?.lastRapid.toString()) }
 
                 Column {
                     TextRating("Bullet")
-                    TextRating("2950")
-                }
+                    TextRating(player?.eloStats?.lastBullet.toString()) }
 
                 Column {
-                    TextRating("Puzzle")
-                    TextRating("3000")
-                }
+                    TextRating("Fide")
+                    TextRating(player?.eloStats?.fide.toString()) }
             }
         }
 

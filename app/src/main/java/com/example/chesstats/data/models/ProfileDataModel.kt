@@ -9,6 +9,7 @@ data class ProfileDataModel(
  @SerializedName("url") val url: String,
  @SerializedName("name") val name: String,
  @SerializedName("username") val username: String,
+ @SerializedName("title") val title: String? = null,
  @SerializedName("followers") val followers: Int,
  @SerializedName("country") val country: String,
  @SerializedName("last_online") val lastOnline: Long,
@@ -17,5 +18,5 @@ data class ProfileDataModel(
  @SerializedName("is_streamer") val isStreamer: Boolean,
  @SerializedName("verified") val verified: Boolean,
  @SerializedName("league") val league: String,
- @SerializedName("streaming_platforms") val streamingPlatforms: List<String>
+ @SerializedName("streaming_platforms") val streamingPlatforms: List<StreamPlatformModel>?
 )

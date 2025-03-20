@@ -8,10 +8,15 @@ import javax.inject.Inject
 
 class ChessRepositoryImp @Inject constructor(
     private val playerService: PlayerService
-): ChessRepository {
+) : ChessRepository {
     override suspend fun getPlayerInfo(playerName: String): PlayerDomainModel? {
+
         val player = playerService.getPlayerInfo(playerName)
-        val finalData = PlayerMapper.playerDataModelToDomainModel(player.body())
+        val playerStats = playerService.getPlayerStatsInfo(playerName)
+        val finalData = PlayerMapper.playerDataModelToDomainModel(
+            dataModel = player.body(),
+            dataStats = playerStats.body()
+        )
         return finalData
     }
 }

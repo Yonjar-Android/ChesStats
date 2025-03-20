@@ -6,5 +6,7 @@ data class PlayerDomainModel(
     val id: String,
     val name: String,
     val username: String,
-    val country: String
+    val country: String,
+    val eloStats: PlayerEloStats? = null,
+    val title: String? = null
 )
