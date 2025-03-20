@@ -13,6 +13,11 @@ class ChessRepositoryImp @Inject constructor(
 
         val player = playerService.getPlayerInfo(playerName)
         val playerStats = playerService.getPlayerStatsInfo(playerName)
+
+        if (player.body() == null || playerStats.body() == null) {
+            return null
+        }
+
         val finalData = PlayerMapper.playerDataModelToDomainModel(
             dataModel = player.body(),
             dataStats = playerStats.body()

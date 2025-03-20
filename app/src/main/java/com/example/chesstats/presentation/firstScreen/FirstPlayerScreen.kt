@@ -2,6 +2,7 @@ package com.example.chesstats.presentation.firstScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -44,6 +46,8 @@ fun FirstPlayerScreen(
 
     val player by hiltViewModel.player.collectAsState()
 
+    val loading by hiltViewModel.loading.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,13 +58,12 @@ fun FirstPlayerScreen(
         var searchQuery by remember { mutableStateOf("") }
 
         Row(
-            modifier = Modifier,
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.background(Color.DarkGray),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
 
             Spacer(modifier = Modifier.weight(0.1f))
 
-            // TextField (centrado)
             TextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
@@ -83,8 +86,10 @@ fun FirstPlayerScreen(
             )
 
             IconButton(
+                modifier = Modifier
+                    .padding(vertical = 10.dp, horizontal = 5.dp),
                 onClick = {
-
+                    hiltViewModel.searchPlayer(searchQuery)
                 }) {
                 Icon(
                     modifier = Modifier
@@ -109,7 +114,7 @@ fun FirstPlayerScreen(
             AsyncImage(
                 model = player?.profileImage,
                 contentDescription = "Profile Image",
-                contentScale = ContentScale.FillWidth,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(125.dp)
                     .clip(CircleShape)
@@ -216,6 +221,21 @@ fun FirstPlayerScreen(
             )
         }
     }
+
+    // Loading
+    if (loading){
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ){
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(Color.White)
+                    .padding(5.dp)
+            )}
+    }
+
 }
 
 @Composable

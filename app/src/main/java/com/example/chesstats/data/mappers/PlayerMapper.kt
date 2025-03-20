@@ -16,7 +16,7 @@ object PlayerMapper {
             name = dataModel?.name ?: "",
             username = dataModel?.username ?: "",
             country = dataModel?.country ?: "",
-            profileImage = dataModel?.avatar ?: "",
+            profileImage = dataModel?.avatar ?: "https://airtonalonso.com/wp-content/uploads/2024/07/Chesscom.jpg",
             eloStats = PlayerEloStats(
                 bestBlitz = dataStats?.chessBlitz?.best?.rating ?: 0,
                 lastBlitz = dataStats?.chessBlitz?.last?.rating ?: 0,

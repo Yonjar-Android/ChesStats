@@ -16,9 +16,36 @@ class FirstScreenViewModel @Inject constructor(
 
     var player = MutableStateFlow<PlayerDomainModel?>(null)
 
+    var loading = MutableStateFlow<Boolean>(false)
+
     init {
         viewModelScope.launch {
-            player.value = chessRepositoryImp.getPlayerInfo("annacramling")
+            loading.value = true
+            player.value = chessRepositoryImp.getPlayerInfo("magnuscarlsen")
+            resetLoad()
         }
+    }
+
+    fun searchPlayer(username:String){
+        loading.value = true
+        viewModelScope.launch{
+            try{
+                val playerSearch = chessRepositoryImp.getPlayerInfo(username)
+
+                if(playerSearch == null){
+                    resetLoad()
+                } else{
+                    player.value = playerSearch
+                    resetLoad()
+
+                }
+            } catch(e:Exception){
+                println(e.message)
+            }
+        }
+    }
+
+    fun resetLoad(){
+        loading.value = false
     }
 }
