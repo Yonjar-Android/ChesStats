@@ -1,16 +1,20 @@
 package com.example.chesstats.presentation.firstScreen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -32,12 +36,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.example.chesstats.R
+import com.example.chesstats.domain.models.ModeStats
+import com.example.chesstats.domain.models.PlayerDomainModel
 
 @Composable
 fun FirstPlayerScreen(
@@ -51,15 +59,15 @@ fun FirstPlayerScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black),
+            .background(Color(0XFF101B23))
+            .windowInsetsPadding(WindowInsets.systemBars),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         var searchQuery by remember { mutableStateOf("") }
 
         Row(
-            modifier = Modifier.background(Color.DarkGray),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.Bottom
         ) {
 
             Spacer(modifier = Modifier.weight(0.1f))
@@ -87,7 +95,8 @@ fun FirstPlayerScreen(
 
             IconButton(
                 modifier = Modifier
-                    .padding(vertical = 10.dp, horizontal = 5.dp),
+                    .padding(horizontal = 5.dp)
+                    .clip(CircleShape),
                 onClick = {
                     hiltViewModel.searchPlayer(searchQuery)
                 }) {
@@ -103,179 +112,200 @@ fun FirstPlayerScreen(
 
         EditSpacer()
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(fraction = 0.9f)
-                .clip(RoundedCornerShape(20.dp))
-                .background(Color.DarkGray)
-                .padding(vertical = 12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AsyncImage(
-                model = player?.profileImage,
-                contentDescription = "Profile Image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(125.dp)
-                    .clip(CircleShape)
-            )
-
-            EditSpacer()
-
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    player?.name ?: "",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    color = Color.White
-                )
-
-
-
-                if (player?.title != null){
-                    EditSpacer()
-
-                    Text(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(Color(0XFFA62934))
-                            .padding(vertical = 2.dp, horizontal = 5.dp),
-                        text = player?.title ?: "",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        color = Color.White,
-                    )
-                }
-            }
-
-            EditSpacer()
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Column {
-                    TextRating("Blitz")
-                    TextRating(player?.eloStats?.lastBlitz.toString()) }
-
-                Column {
-                    TextRating("Rapid")
-                    TextRating(player?.eloStats?.lastRapid.toString()) }
-
-                Column {
-                    TextRating("Bullet")
-                    TextRating(player?.eloStats?.lastBullet.toString()) }
-
-                Column {
-                    TextRating("Fide")
-                    TextRating(player?.eloStats?.fide.toString()) }
-            }
-        }
+        PlayerProfileInfo(player)
 
         EditSpacer(sizeDp = 40.dp)
 
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        PlayerStatsInfo(player)
 
-            EditSpacer(15.dp)
-
-            Text(
-                "Strongest Defeated Rivals",
-                color = Color.White, fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        EditSpacer()
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(fraction = 0.9f)
-                .clip(RoundedCornerShape(20.dp))
-                .background(Color.DarkGray)
-                .padding(12.dp),
-            horizontalAlignment = Alignment.Start
-        ) {
-            StrongestPlayerDefeatedItem(
-                image = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/FIDE_World_FR_Chess_Championship_2019_-_Magnus_Carlsen_%28cropped1%29.jpg/800px-FIDE_World_FR_Chess_Championship_2019_-_Magnus_Carlsen_%28cropped1%29.jpg",
-                playerName = "Magnus Carlsen",
-            )
-
-            EditSpacer()
-
-            StrongestPlayerDefeatedItem(
-                image = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/FIDE_World_FR_Chess_Championship_2019_-_Magnus_Carlsen_%28cropped1%29.jpg/800px-FIDE_World_FR_Chess_Championship_2019_-_Magnus_Carlsen_%28cropped1%29.jpg",
-                playerName = "Magnus Carlsen",
-            )
-
-            EditSpacer()
-
-            StrongestPlayerDefeatedItem(
-                image = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/FIDE_World_FR_Chess_Championship_2019_-_Magnus_Carlsen_%28cropped1%29.jpg/800px-FIDE_World_FR_Chess_Championship_2019_-_Magnus_Carlsen_%28cropped1%29.jpg",
-                playerName = "Magnus Carlsen",
-            )
-        }
     }
 
     // Loading
-    if (loading){
+    if (loading) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
-        ){
+        ) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .clip(CircleShape)
                     .background(Color.White)
                     .padding(5.dp)
-            )}
+            )
+        }
     }
 
 }
 
 @Composable
-fun TextRating(text: String) {
-
-    Text(
-        text = text,
-        fontSize = 14.sp,
-        color = Color.White,
-        textAlign = TextAlign.Center
-    )
-}
-
-@Composable
-fun StrongestPlayerDefeatedItem(
-    image: String,
-    playerName: String
-){
-    Row(
-        verticalAlignment = Alignment.CenterVertically
+fun PlayerProfileInfo(player: PlayerDomainModel?){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(fraction = 0.9f)
+            .clip(RoundedCornerShape(20.dp))
+            .background(Color.DarkGray)
+            .padding(vertical = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AsyncImage(
-            model = image,
+            model = player?.profileImage,
             contentDescription = "Profile Image",
-            contentScale = ContentScale.FillWidth,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(60.dp)
+                .size(125.dp)
                 .clip(CircleShape)
         )
 
-        Spacer(modifier = Modifier.size(10.dp))
+        EditSpacer()
 
-        Text(playerName, color = Color.White,
-            fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                player?.name ?: "",
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                color = Color.White
+            )
+
+            if (player?.title != null) {
+                EditSpacer()
+
+                Text(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(5.dp))
+                        .background(Color(0XFFA62934))
+                        .padding(vertical = 2.dp, horizontal = 5.dp),
+                    text = player?.title?.name ?: "",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = Color.White,
+                )
+            }
+        }
+
+        Text(
+            text = "Username: ${player?.username}",
+            fontSize = 14.sp,
+            color = Color(0XFF8FB0CC),
+            textAlign = TextAlign.Center
+        )
+
+        EditSpacer()
     }
+}
+
+@Composable
+fun PlayerStatsInfo(player: PlayerDomainModel?){
+
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+
+        EditSpacer(15.dp)
+
+        Text(
+            "Stats",
+            color = Color.White, fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+
+    EditSpacer()
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ChessModeItem(image = R.drawable.blitz,
+            chessMode = "Blitz",
+            chessStats = player?.eloStats?.blitzStats)
+
+        ChessModeItem(image = R.drawable.rapid,
+            chessMode = "Rapid",
+            chessStats = player?.eloStats?.rapidStats)
+
+        ChessModeItem(image = R.drawable.bullet,
+            chessMode = "Bullet",
+            chessStats = player?.eloStats?.bulletStats)
+
+        Row(modifier = Modifier.fillMaxWidth(fraction = 0.95f),
+            verticalAlignment = Alignment.CenterVertically) {
+
+            if (player?.title != null){
+
+                Image(
+                    painter = painterResource(R.drawable.title),
+                    contentDescription = "icon",
+                    modifier = Modifier.size(58.dp)
+                )
+
+                EditSpacer()
+
+                Text(
+                    text = "${player.title.titled} (${player.title.name})",
+                    fontSize = 16.sp,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ChessModeItem(image: Int, chessMode:String, chessStats: ModeStats?) {
+    Row(
+        modifier = Modifier.fillMaxWidth(fraction = 0.95f),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(image),
+            contentDescription = "icon"
+        )
+
+        EditSpacer()
+
+        Column {
+            TextRating(chessMode, chessStats)
+        }
+    }
+
+    EditSpacer()
+}
+
+
+@Composable
+fun TextRating(chessMode: String, stats: ModeStats?) {
+
+    Column {
+
+        Text(
+            text = "${stats?.last} ( Best: ${stats?.best} )",
+            fontSize = 16.sp,
+            color = Color.White,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.SemiBold
+        )
+
+        EditSpacer(2.dp)
+
+            Text(
+                text = "$chessMode ( W: ${stats?.wins}, D: ${stats?.draws}, L: ${stats?.losses} )",
+                fontSize = 14.sp,
+                color = Color(0XFF8FB0CC),
+                textAlign = TextAlign.Center
+            )
+
+    }
+
 }
 
 @Composable
 fun EditSpacer(
     sizeDp: Dp = 10.dp
-){
+) {
     Spacer(modifier = Modifier.size(sizeDp))
 }

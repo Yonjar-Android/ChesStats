@@ -1,5 +1,7 @@
 package com.example.chesstats.domain.models
 
+import com.example.chesstats.presentation.firstScreen.TitledMasters
+
 data class PlayerDomainModel(
     val profileImage: String,
     val playerId: Long,
@@ -8,5 +10,5 @@ data class PlayerDomainModel(
     val username: String,
     val country: String,
     val eloStats: PlayerEloStats? = null,
-    val title: String? = null
+    val title: TitledMasters? = null
 )

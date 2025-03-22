@@ -7,5 +7,8 @@ data class PlayerEloStats(
     val lastRapid: Int,
     val bestBullet: Int,
     val lastBullet: Int,
-    val fide: Int = 0
+    val fide: Int = 0,
+    val rapidStats: ModeStats?,
+    val blitzStats: ModeStats?,
+    val bulletStats: ModeStats?
 )

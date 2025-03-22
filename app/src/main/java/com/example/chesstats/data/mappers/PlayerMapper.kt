@@ -2,8 +2,10 @@ package com.example.chesstats.data.mappers
 
 import com.example.chesstats.data.models.ChessStats
 import com.example.chesstats.data.models.ProfileDataModel
+import com.example.chesstats.domain.models.ModeStats
 import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.domain.models.PlayerEloStats
+import com.example.chesstats.presentation.firstScreen.TitledMasters
 
 object PlayerMapper {
     fun playerDataModelToDomainModel(
@@ -24,9 +26,30 @@ object PlayerMapper {
                 lastRapid = dataStats?.chessRapid?.best?.rating ?: 0,
                 bestBullet = dataStats?.chessRapid?.best?.rating ?: 0,
                 lastBullet = dataStats?.chessRapid?.best?.rating ?: 0,
-                fide = dataStats?.fide ?: 0
+                fide = dataStats?.fide ?: 0,
+                rapidStats = ModeStats(
+                    wins = dataStats?.chessRapid?.record?.win ?: 0,
+                    losses = dataStats?.chessRapid?.record?.loss ?: 0,
+                    draws = dataStats?.chessRapid?.record?.draw ?: 0,
+                    best = dataStats?.chessRapid?.best?.rating ?: 0,
+                    last = dataStats?.chessRapid?.last?.rating ?: 0,
+                ),
+                blitzStats = ModeStats(
+                    wins = dataStats?.chessBlitz?.record?.win ?: 0,
+                    losses = dataStats?.chessBlitz?.record?.loss ?: 0,
+                    draws = dataStats?.chessBlitz?.record?.draw ?: 0,
+                    best = dataStats?.chessBlitz?.best?.rating ?: 0,
+                    last = dataStats?.chessBlitz?.last?.rating ?: 0,
+                ),
+                bulletStats = ModeStats(
+                    wins = dataStats?.chessBullet?.record?.win ?: 0,
+                    losses = dataStats?.chessBullet?.record?.loss ?: 0,
+                    draws = dataStats?.chessBullet?.record?.draw ?: 0,
+                    best = dataStats?.chessBullet?.best?.rating ?: 0,
+                    last = dataStats?.chessBullet?.last?.rating ?: 0,
+                )
             ),
-            title = dataModel?.title
+            title = TitledMasters.fromString(dataModel?.title)
         )
     }
 }
