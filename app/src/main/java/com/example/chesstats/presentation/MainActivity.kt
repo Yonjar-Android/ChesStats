@@ -6,14 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
@@ -29,6 +27,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.chesstats.R
+import com.example.chesstats.presentation.detailPlayerScreen.DetailPlayerScreen
+import com.example.chesstats.presentation.detailPlayerScreen.DetailPlayerViewModel
 import com.example.chesstats.presentation.firstScreen.FirstPlayerScreen
 import com.example.chesstats.presentation.firstScreen.FirstScreenViewModel
 import com.example.chesstats.presentation.leaderboardScreen.LeaderBoardScreen
@@ -41,6 +41,7 @@ class MainActivity : ComponentActivity() {
 
     private val firstScreenViewModel: FirstScreenViewModel by viewModels()
     private val leaderBoardViewModel: LeaderBoardViewModel by viewModels()
+    private val detailPlayerViewModel: DetailPlayerViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +65,14 @@ class MainActivity : ComponentActivity() {
 
                             // Pantalla B
                             composable("LeaderBoardScreen") {
-                                LeaderBoardScreen(leaderBoardViewModel)
+                                LeaderBoardScreen(leaderBoardViewModel, controller)
+                            }
+
+                            composable("DetailPlayerScreen/{username}"){ backstackEntry ->
+                                val username = backstackEntry.arguments?.getString("username") ?: ""
+                                DetailPlayerScreen(username,
+                                    controller = controller,
+                                    detailPlayerViewModel = detailPlayerViewModel)
                             }
                         }
                     },

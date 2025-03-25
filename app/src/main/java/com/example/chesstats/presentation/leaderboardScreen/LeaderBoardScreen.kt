@@ -1,9 +1,11 @@
 package com.example.chesstats.presentation.leaderboardScreen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.chesstats.data.models.ProfileDataModel
 import com.example.chesstats.presentation.extras.ChargeScreen
@@ -41,7 +44,10 @@ import com.example.chesstats.presentation.firstScreen.EditSpacer
 
 
 @Composable
-fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel) {
+fun LeaderBoardScreen(
+    leaderBoardViewModel: LeaderBoardViewModel,
+    controller: NavController
+) {
 
     val rapidPlayers by leaderBoardViewModel.rapidPlayers.collectAsState()
     val blitzPlayers by leaderBoardViewModel.blitzPlayers.collectAsState()
@@ -55,13 +61,16 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel) {
 
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(Color(0XFF101B23))
     ) {
 
 
         TabRow(
-            modifier = Modifier.padding(10.dp).clip(RoundedCornerShape(10.dp)),
+            modifier = Modifier
+                .padding(10.dp)
+                .clip(RoundedCornerShape(10.dp)),
             selectedTabIndex = selectedTab.intValue,
             containerColor = Color(0XFF223849),
             divider = {},
@@ -80,7 +89,7 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel) {
                     animationSpec = tween(durationMillis = 200)
                 )
 
-                if (isSelected){
+                if (isSelected) {
                     Tab(
                         modifier = Modifier
                             .height(30.dp)
@@ -90,15 +99,18 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel) {
                             .animateContentSize(),
                         selected = selectedTab.intValue == index,
                         onClick = { selectedTab.intValue = index },
-                        text = { Text(text = title, color = textColor,
-                            fontWeight = if(isSelected) FontWeight.Bold else FontWeight.Normal)
+                        text = {
+                            Text(
+                                text = title, color = textColor,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                            )
                         }
                     )
-                } else{
+                } else {
                     Tab(
                         selected = selectedTab.intValue == index,
                         onClick = { selectedTab.intValue = index },
-                        text = { Text(text = title, color = Color.White)}
+                        text = { Text(text = title, color = Color.White) }
                     )
                 }
 
@@ -109,32 +121,35 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel) {
 
         when (selectedTab.intValue) {
             0 -> {
-                LeaderBoardModeScreen(rapidPlayers)
+                LeaderBoardModeScreen(rapidPlayers, controller)
             }
 
             1 -> {
-                LeaderBoardModeScreen(blitzPlayers)
+                LeaderBoardModeScreen(blitzPlayers, controller)
             }
 
             2 -> {
-                LeaderBoardModeScreen(bulletPlayers)
+                LeaderBoardModeScreen(bulletPlayers, controller)
             }
         }
 
-        if (loading){
+        if (loading) {
             ChargeScreen()
         }
     }
+
+    BackHandler {}
 }
 
 @Composable
 fun LeaderBoardModeScreen(
-    players: List<ProfileDataModel>?
+    players: List<ProfileDataModel>?,
+    controller: NavController
 ) {
     LazyColumn {
         players?.let {
             items(players) {
-                PlayerRankItem(it)
+                PlayerRankItem(it, controller = controller)
                 Spacer(modifier = Modifier.size(10.dp))
             }
         }
@@ -142,9 +157,14 @@ fun LeaderBoardModeScreen(
 }
 
 @Composable
-fun PlayerRankItem(player: ProfileDataModel) {
+fun PlayerRankItem(player: ProfileDataModel, controller: NavController) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp)
+            .clickable {
+                controller.navigate("DetailPlayerScreen/${player.username}")
+            },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
