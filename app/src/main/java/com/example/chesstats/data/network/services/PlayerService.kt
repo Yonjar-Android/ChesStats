@@ -1,6 +1,7 @@
 package com.example.chesstats.data.network.services
 
 import com.example.chesstats.data.models.ChessStats
+import com.example.chesstats.data.models.LeaderBoardModel
 import com.example.chesstats.data.models.ProfileDataModel
 import retrofit2.Response
 import retrofit2.http.GET
@@ -13,5 +14,8 @@ interface PlayerService {
 
     @GET("pub/player/{username}/stats")
     suspend fun getPlayerStatsInfo(@Path("username") username: String): Response<ChessStats>
+
+    @GET("pub/leaderboards")
+    suspend fun getLeaderBoards(): Response<LeaderBoardModel>
 
 }

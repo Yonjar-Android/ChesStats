@@ -177,7 +177,7 @@ fun PlayerProfileInfo(player: PlayerDomainModel?){
                         .clip(RoundedCornerShape(5.dp))
                         .background(Color(0XFFA62934))
                         .padding(vertical = 2.dp, horizontal = 5.dp),
-                    text = player?.title?.name ?: "",
+                    text = player.title.name,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     color = Color.White,

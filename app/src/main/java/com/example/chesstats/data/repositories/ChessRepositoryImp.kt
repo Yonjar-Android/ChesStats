@@ -1,6 +1,7 @@
 package com.example.chesstats.data.repositories
 
 import com.example.chesstats.data.mappers.PlayerMapper
+import com.example.chesstats.data.models.LeaderBoardModel
 import com.example.chesstats.data.network.services.PlayerService
 import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.domain.repositories.ChessRepository
@@ -23,5 +24,9 @@ class ChessRepositoryImp @Inject constructor(
             dataStats = playerStats.body()
         )
         return finalData
+    }
+
+    override suspend fun getLeaderBoards(): LeaderBoardModel? {
+        return playerService.getLeaderBoards().body()
     }
 }

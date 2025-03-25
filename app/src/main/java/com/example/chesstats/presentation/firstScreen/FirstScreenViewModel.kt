@@ -20,9 +20,8 @@ class FirstScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            loading.value = true
-            player.value = chessRepositoryImp.getPlayerInfo("magnuscarlsen")
-            resetLoad()
+            searchPlayer("magnuscarlsen")
+            chessRepositoryImp.getLeaderBoards()
         }
     }
 
@@ -32,15 +31,14 @@ class FirstScreenViewModel @Inject constructor(
             try{
                 val playerSearch = chessRepositoryImp.getPlayerInfo(username)
 
-                if(playerSearch == null){
-                    resetLoad()
-                } else{
+                if(playerSearch != null){
                     player.value = playerSearch
-                    resetLoad()
-
                 }
             } catch(e:Exception){
                 println(e.message)
+            }
+            finally {
+                resetLoad()
             }
         }
     }
