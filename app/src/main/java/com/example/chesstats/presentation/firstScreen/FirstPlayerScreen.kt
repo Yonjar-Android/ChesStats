@@ -46,6 +46,7 @@ import coil3.compose.AsyncImage
 import com.example.chesstats.R
 import com.example.chesstats.domain.models.ModeStats
 import com.example.chesstats.domain.models.PlayerDomainModel
+import com.example.chesstats.presentation.extras.ChargeScreen
 
 @Composable
 fun FirstPlayerScreen(
@@ -67,50 +68,55 @@ fun FirstPlayerScreen(
         var searchQuery by remember { mutableStateOf("") }
 
         Row(
-            verticalAlignment = Alignment.Bottom
+            verticalAlignment = Alignment.Bottom,
+            modifier = Modifier.fillMaxWidth(fraction = 0.95f)
+                .clip(RoundedCornerShape(10.dp))
         ) {
 
             Spacer(modifier = Modifier.weight(0.1f))
 
             TextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                modifier = Modifier
-                    .weight(2f) // Ajusta el peso para centrar el TextField
-                    .clip(RoundedCornerShape(20.dp))
-                    .height(60.dp)
-                    .testTag("tfSearch"),
-                placeholder = { Text("Buscar", color = Color.White) },
-                singleLine = true,
-                colors = androidx.compose.material3.TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.White,
-                    unfocusedIndicatorColor = Color.White,
-                    cursorColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                )
-            )
-
-            IconButton(
-                modifier = Modifier
-                    .padding(horizontal = 5.dp)
-                    .clip(CircleShape),
-                onClick = {
-                    hiltViewModel.searchPlayer(searchQuery)
-                }) {
-                Icon(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
                     modifier = Modifier
-                        .size(30.dp),
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = "search icon",
-                    tint = Color.White
+                        .fillMaxWidth()
+                        .background(Color(0XFF223849))
+                        // Ajusta el peso para centrar el TextField
+                        .clip(RoundedCornerShape(20.dp))
+                        .height(60.dp)
+                        .testTag("tfSearch"),
+                    placeholder = { Text("Buscar", color = Color.White) },
+                    singleLine = true,
+                    colors = androidx.compose.material3.TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        cursorColor = Color.White,
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White,
+                    ),
+                    trailingIcon = {
+                        IconButton(
+                            modifier = Modifier
+                                .padding(horizontal = 5.dp)
+                                .clip(CircleShape),
+                            onClick = {
+                                hiltViewModel.searchPlayer(searchQuery)
+                            }) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(30.dp),
+                                imageVector = Icons.Filled.Search,
+                                contentDescription = "search icon",
+                                tint = Color.White
+                            )
+                        }
+                    }
                 )
-            }
         }
 
-        EditSpacer()
+        EditSpacer(15.dp)
 
         PlayerProfileInfo(player)
 
@@ -122,28 +128,18 @@ fun FirstPlayerScreen(
 
     // Loading
     if (loading) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .background(Color.White)
-                    .padding(5.dp)
-            )
-        }
+        ChargeScreen()
     }
 
 }
 
 @Composable
-fun PlayerProfileInfo(player: PlayerDomainModel?){
+fun PlayerProfileInfo(player: PlayerDomainModel?) {
     Column(
         modifier = Modifier
             .fillMaxWidth(fraction = 0.9f)
             .clip(RoundedCornerShape(20.dp))
-            .background(Color.DarkGray)
+            .background(Color.Transparent)
             .padding(vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -152,7 +148,7 @@ fun PlayerProfileInfo(player: PlayerDomainModel?){
             contentDescription = "Profile Image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(125.dp)
+                .size(150.dp)
                 .clip(CircleShape)
         )
 
@@ -192,12 +188,12 @@ fun PlayerProfileInfo(player: PlayerDomainModel?){
             textAlign = TextAlign.Center
         )
 
-        EditSpacer()
+
     }
 }
 
 @Composable
-fun PlayerStatsInfo(player: PlayerDomainModel?){
+fun PlayerStatsInfo(player: PlayerDomainModel?) {
 
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -218,22 +214,30 @@ fun PlayerStatsInfo(player: PlayerDomainModel?){
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ChessModeItem(image = R.drawable.blitz,
+        ChessModeItem(
+            image = R.drawable.blitz,
             chessMode = "Blitz",
-            chessStats = player?.eloStats?.blitzStats)
+            chessStats = player?.eloStats?.blitzStats
+        )
 
-        ChessModeItem(image = R.drawable.rapid,
+        ChessModeItem(
+            image = R.drawable.rapid,
             chessMode = "Rapid",
-            chessStats = player?.eloStats?.rapidStats)
+            chessStats = player?.eloStats?.rapidStats
+        )
 
-        ChessModeItem(image = R.drawable.bullet,
+        ChessModeItem(
+            image = R.drawable.bullet,
             chessMode = "Bullet",
-            chessStats = player?.eloStats?.bulletStats)
+            chessStats = player?.eloStats?.bulletStats
+        )
 
-        Row(modifier = Modifier.fillMaxWidth(fraction = 0.95f),
-            verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.fillMaxWidth(fraction = 0.95f),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
-            if (player?.title != null){
+            if (player?.title != null) {
 
                 Image(
                     painter = painterResource(R.drawable.title),
@@ -256,7 +260,7 @@ fun PlayerStatsInfo(player: PlayerDomainModel?){
 }
 
 @Composable
-fun ChessModeItem(image: Int, chessMode:String, chessStats: ModeStats?) {
+fun ChessModeItem(image: Int, chessMode: String, chessStats: ModeStats?) {
     Row(
         modifier = Modifier.fillMaxWidth(fraction = 0.95f),
         verticalAlignment = Alignment.CenterVertically
@@ -292,12 +296,12 @@ fun TextRating(chessMode: String, stats: ModeStats?) {
 
         EditSpacer(2.dp)
 
-            Text(
-                text = "$chessMode ( W: ${stats?.wins}, D: ${stats?.draws}, L: ${stats?.losses} )",
-                fontSize = 14.sp,
-                color = Color(0XFF8FB0CC),
-                textAlign = TextAlign.Center
-            )
+        Text(
+            text = "$chessMode ( W: ${stats?.wins}, D: ${stats?.draws}, L: ${stats?.losses} )",
+            fontSize = 14.sp,
+            color = Color(0XFF8FB0CC),
+            textAlign = TextAlign.Center
+        )
 
     }
 

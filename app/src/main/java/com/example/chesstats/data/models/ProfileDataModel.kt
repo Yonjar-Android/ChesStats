@@ -3,12 +3,12 @@ package com.example.chesstats.data.models
 import com.google.gson.annotations.SerializedName
 
 data class ProfileDataModel(
- @SerializedName("avatar") val avatar: String,
+ @SerializedName("avatar") val avatar: String?,
  @SerializedName("player_id") val playerId: Long,
  @SerializedName("@id") val id: String,
  @SerializedName("url") val url: String,
- @SerializedName("name") val name: String,
- @SerializedName("username") val username: String,
+ @SerializedName("name") val name: String?,
+ @SerializedName("username") val username: String?,
  @SerializedName("title") val title: String? = null,
  @SerializedName("followers") val followers: Int?,
  @SerializedName("country") val country: String,

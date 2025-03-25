@@ -25,6 +25,7 @@ class LeaderBoardViewModel @Inject constructor(
     }
 
     private fun getLeaderBoards(){
+        loading.value = true
         viewModelScope.launch {
             try {
                 loading.value = true

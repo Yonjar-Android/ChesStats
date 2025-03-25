@@ -8,6 +8,10 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
@@ -20,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -69,31 +74,42 @@ class MainActivity : ComponentActivity() {
                         var selected by remember {mutableIntStateOf(0)}
 
                         NavigationBar(
-                            containerColor = (Color(0XFF606E79))
+                            containerColor = (Color(0XFF172734))
                         ) {
                             NavigationBarItem(selected = selected == 0,
-                                colors = NavigationBarItemDefaults.colors(),
+                                colors = NavigationBarItemDefaults.colors(
+                                    indicatorColor = Color(0XFF171434)
+                                ),
                                 icon = {
-                                    Image(painter = painterResource(R.drawable.blitz),
-                                        contentDescription = "Icon")
+                                    Icon(imageVector = Icons.Default.Search,
+                                        contentDescription = "Icon", modifier = Modifier.size(40.dp),
+                                        tint = Color.White
+                                        )
                             }, onClick = {
                                 controller.navigate("FirstPlayerScreen")
                                     selected = 0
                                 })
 
                             NavigationBarItem(selected = selected == 1,
+                                colors = NavigationBarItemDefaults.colors(
+                                    indicatorColor = Color(0XFF171434)
+                                ),
                                 icon = {
-                                    Image(painter = painterResource(R.drawable.bullet),
-                                        contentDescription = "Icon")
+                                    Icon(painter = painterResource(R.drawable.ranking),
+                                        contentDescription = "Icon", modifier = Modifier.size(40.dp),
+                                        tint = Color.White)
                                 }, onClick = {
                                     controller.navigate("LeaderBoardScreen")
                                     selected = 1
                                 })
 
                             NavigationBarItem(selected = selected == 2,
+                                colors = NavigationBarItemDefaults.colors(
+                                    indicatorColor = Color(0XFF171434)
+                                ),
                                 icon = {
                                     Image(painter = painterResource(R.drawable.rapid),
-                                        contentDescription = "Icon")
+                                        contentDescription = "Icon", modifier = Modifier.size(40.dp))
                                 }, onClick = {
                                     selected = 2
                                 })
