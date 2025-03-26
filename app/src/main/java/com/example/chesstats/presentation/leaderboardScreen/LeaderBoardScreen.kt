@@ -8,8 +8,13 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.EaseInBounce
+import androidx.compose.animation.core.EaseInCirc
+import androidx.compose.animation.core.EaseInExpo
+import androidx.compose.animation.core.EaseInQuad
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -86,11 +91,11 @@ fun SharedTransitionScope.LeaderBoardScreen(
 
                 val backgroundColor by animateColorAsState(
                     targetValue = if (isSelected) Color(0XFF101B23) else Color.Transparent,
-                    animationSpec = tween(durationMillis = 200)
+                    animationSpec = tween(durationMillis = 500, easing = EaseInQuad)
                 )
                 val textColor by animateColorAsState(
                     targetValue = if (isSelected) Color.White else Color.White.copy(alpha = 0.8f),
-                    animationSpec = tween(durationMillis = 200)
+                    animationSpec = tween(durationMillis = 500, easing = EaseInQuad)
                 )
 
                 if (isSelected) {
@@ -199,17 +204,20 @@ fun SharedTransitionScope.PlayerRankItem(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
+
             AsyncImage(
                 model = player.avatar,
                 contentDescription = "profile picture",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(65.dp)
                     .sharedElement(
                         state = rememberSharedContentState(key = "image/${player.avatar}"),
-                        animatedVisibilityScope = animatedVisibilityScope
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = { _, _ -> tween(durationMillis = 250) }
                     )
+                    .size(65.dp)
                     .clip(CircleShape)
+                    .border(width = 1.dp, color = Color.White, shape = CircleShape)
             )
 
             EditSpacer()
@@ -224,7 +232,10 @@ fun SharedTransitionScope.PlayerRankItem(
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.sharedElement(
                         state = rememberSharedContentState(key = "username/${player.id}"),
-                        animatedVisibilityScope = animatedVisibilityScope
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = { _, _ ->
+                            tween(durationMillis = 250)
+                        }
                     )
                 )
 

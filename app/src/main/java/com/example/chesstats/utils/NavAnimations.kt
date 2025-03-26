@@ -12,28 +12,28 @@ object NavAnimations {
     fun enterAnimation(): EnterTransition {
         return slideInHorizontally(
             initialOffsetX = { fullWidth -> fullWidth },
-            animationSpec = tween(durationMillis = 200)
-        ) + fadeIn(animationSpec = tween(300))
+            animationSpec = tween(durationMillis = 250)
+        ) + fadeIn(animationSpec = tween(250))
     }
 
     fun exitAnimation(): ExitTransition {
         return slideOutHorizontally(
             targetOffsetX = { fullWidth -> -fullWidth },
-            animationSpec = tween(durationMillis = 200)
-        ) + fadeOut(animationSpec = tween(300))
+            animationSpec = tween(durationMillis = 250)
+        ) + fadeOut(animationSpec = tween(250))
     }
 
     fun popEnterAnimation(): EnterTransition {
         return slideInHorizontally(
             initialOffsetX = { fullWidth -> -fullWidth },
-            animationSpec = tween(durationMillis = 200)
-        ) + fadeIn(animationSpec = tween(300))
+            animationSpec = tween(durationMillis = 250)
+        ) + fadeIn(animationSpec = tween(250))
     }
 
     fun popExitAnimation(): ExitTransition {
         return slideOutHorizontally(
             targetOffsetX = { fullWidth -> fullWidth },
-            animationSpec = tween(durationMillis = 200)
-        ) + fadeOut(animationSpec = tween(300))
+            animationSpec = tween(durationMillis = 250)
+        ) + fadeOut(animationSpec = tween(250))
     }
 }

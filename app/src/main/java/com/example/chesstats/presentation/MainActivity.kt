@@ -116,7 +116,6 @@ class MainActivity : ComponentActivity() {
                         NavHost(
                             navController = controller,
                             startDestination = "FirstPlayerScreen",
-                            modifier = Modifier,
                             exitTransition = { NavAnimations.exitAnimation() },
                             enterTransition = { NavAnimations.enterAnimation() },
                             popExitTransition = { NavAnimations.popExitAnimation() },

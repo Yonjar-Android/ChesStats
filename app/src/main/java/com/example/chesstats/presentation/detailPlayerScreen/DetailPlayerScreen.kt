@@ -6,7 +6,9 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -105,18 +107,21 @@ fun SharedTransitionScope.PlayerDetailProfileInfo(
             .padding(vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AsyncImage(
-            model = player?.profileImage,
-            contentDescription = "Profile Image",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(150.dp)
-                .sharedElement(
-                    state = rememberSharedContentState(key = "image/${player?.profileImage}"),
-                    animatedVisibilityScope = animatedVisibilityScope
-                )
-                .clip(CircleShape)
-        )
+
+            AsyncImage(
+                model = player?.profileImage,
+                contentDescription = "Profile Image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .sharedElement(
+                        state = rememberSharedContentState(key = "image/${player?.profileImage}"),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = { _, _ -> tween(durationMillis = 250) }
+                    )
+                    .size(150.dp)
+                    .clip(CircleShape)
+                    .border(width = 4.dp, color = Color.White, shape = CircleShape)
+            )
 
         EditSpacer()
 
@@ -131,7 +136,8 @@ fun SharedTransitionScope.PlayerDetailProfileInfo(
                 color = Color.White,
                 modifier = Modifier.sharedElement(
                     state = rememberSharedContentState(key = "username/${player?.id}"),
-                    animatedVisibilityScope = animatedVisibilityScope
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    boundsTransform = { _, _ -> tween(durationMillis = 250) }
                 )
             )
 

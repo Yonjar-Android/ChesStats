@@ -2,6 +2,7 @@ package com.example.chesstats.presentation.firstScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -68,51 +69,52 @@ fun FirstPlayerScreen(
 
         Row(
             verticalAlignment = Alignment.Bottom,
-            modifier = Modifier.fillMaxWidth(fraction = 0.95f)
+            modifier = Modifier
+                .fillMaxWidth(fraction = 0.95f)
                 .clip(RoundedCornerShape(10.dp))
         ) {
 
             Spacer(modifier = Modifier.weight(0.1f))
 
             TextField(
-                    value = searchQuery,
-                    onValueChange = { searchQuery = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0XFF223849))
-                        // Ajusta el peso para centrar el TextField
-                        .clip(RoundedCornerShape(20.dp))
-                        .height(60.dp)
-                        .testTag("tfSearch"),
-                    placeholder = { Text("Buscar", color = Color.White) },
-                    singleLine = true,
-                    colors = androidx.compose.material3.TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        cursorColor = Color.White,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                    ),
-                    trailingIcon = {
-                        IconButton(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0XFF223849))
+                    // Ajusta el peso para centrar el TextField
+                    .clip(RoundedCornerShape(20.dp))
+                    .height(60.dp)
+                    .testTag("tfSearch"),
+                placeholder = { Text("Buscar", color = Color.White) },
+                singleLine = true,
+                colors = androidx.compose.material3.TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    cursorColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                ),
+                trailingIcon = {
+                    IconButton(
+                        modifier = Modifier
+                            .padding(horizontal = 5.dp)
+                            .clip(CircleShape),
+                        onClick = {
+                            hiltViewModel.searchPlayer(searchQuery)
+                        }) {
+                        Icon(
                             modifier = Modifier
-                                .padding(horizontal = 5.dp)
-                                .clip(CircleShape),
-                            onClick = {
-                                hiltViewModel.searchPlayer(searchQuery)
-                            }) {
-                            Icon(
-                                modifier = Modifier
-                                    .size(30.dp),
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = "search icon",
-                                tint = Color.White
-                            )
-                        }
+                                .size(30.dp),
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = "search icon",
+                            tint = Color.White
+                        )
                     }
-                )
+                }
+            )
         }
 
         EditSpacer(15.dp)
@@ -142,14 +144,16 @@ fun PlayerProfileInfo(player: PlayerDomainModel?) {
             .padding(vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AsyncImage(
-            model = player?.profileImage,
-            contentDescription = "Profile Image",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(150.dp)
-                .clip(CircleShape)
-        )
+
+            AsyncImage(
+                model = player?.profileImage,
+                contentDescription = "Profile Image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(160.dp)
+                    .clip(CircleShape)
+                    .border(width = 4.dp, color = Color.White, shape = CircleShape)
+            )
 
         EditSpacer()
 
