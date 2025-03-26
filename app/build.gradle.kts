@@ -78,6 +78,9 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
 
+    // Compose Animation
+
+    implementation(libs.androidx.animation)
 
     // Splash Screen
 
