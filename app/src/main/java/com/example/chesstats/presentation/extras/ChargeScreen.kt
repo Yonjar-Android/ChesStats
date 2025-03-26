@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ fun ChargeScreen(){
     ) {
         CircularProgressIndicator(
             modifier = Modifier
+                .size(65.dp)
                 .clip(CircleShape)
                 .background(Color.White)
                 .padding(5.dp)

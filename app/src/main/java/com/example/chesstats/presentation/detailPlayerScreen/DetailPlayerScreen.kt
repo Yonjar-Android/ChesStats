@@ -1,38 +1,52 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.example.chesstats.presentation.detailPlayerScreen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
+import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.presentation.extras.ChargeScreen
 import com.example.chesstats.presentation.firstScreen.EditSpacer
-import com.example.chesstats.presentation.firstScreen.PlayerProfileInfo
 import com.example.chesstats.presentation.firstScreen.PlayerStatsInfo
 
 @Composable
-fun DetailPlayerScreen(
+fun SharedTransitionScope.DetailPlayerScreen(
     username: String,
     detailPlayerViewModel: DetailPlayerViewModel,
-    controller: NavController
+    controller: NavController,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
     val player by detailPlayerViewModel.player.collectAsState()
@@ -46,24 +60,25 @@ fun DetailPlayerScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0XFF101B23))
-            .windowInsetsPadding(WindowInsets.systemBars),
+            .background(Color(0XFF101B23)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(modifier = Modifier.fillMaxWidth()){
+        Row(modifier = Modifier.fillMaxWidth()) {
             IconButton(
-                onClick = {controller.navigateUp()}
+                onClick = { controller.navigateUp() }
             ) {
-                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "arrow Back",
-                    tint = Color.White, modifier = Modifier.size(30.dp))
+                    tint = Color.White, modifier = Modifier.size(30.dp)
+                )
             }
         }
 
 
         EditSpacer(15.dp)
 
-        PlayerProfileInfo(player)
+        PlayerDetailProfileInfo(player, animatedVisibilityScope = animatedVisibilityScope)
 
         EditSpacer(sizeDp = 40.dp)
 
@@ -75,4 +90,74 @@ fun DetailPlayerScreen(
     }
 
     if (loading) ChargeScreen()
+}
+
+@Composable
+fun SharedTransitionScope.PlayerDetailProfileInfo(
+    player: PlayerDomainModel?,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(fraction = 0.9f)
+            .clip(RoundedCornerShape(20.dp))
+            .background(Color.Transparent)
+            .padding(vertical = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        AsyncImage(
+            model = player?.profileImage,
+            contentDescription = "Profile Image",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(150.dp)
+                .sharedElement(
+                    state = rememberSharedContentState(key = "image/${player?.profileImage}"),
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
+                .clip(CircleShape)
+        )
+
+        EditSpacer()
+
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                player?.name ?: "",
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                color = Color.White,
+                modifier = Modifier.sharedElement(
+                    state = rememberSharedContentState(key = "username/${player?.id}"),
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
+            )
+
+            if (player?.title != null) {
+                EditSpacer()
+
+                Text(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(5.dp))
+                        .background(Color(0XFFA62934))
+                        .padding(vertical = 2.dp, horizontal = 5.dp),
+                    text = player.title.name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = Color.White,
+                )
+            }
+        }
+
+        Text(
+            text = "Username: ${player?.username}",
+            fontSize = 14.sp,
+            color = Color(0XFF8FB0CC),
+            textAlign = TextAlign.Center
+        )
+
+
+    }
 }

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.example.chesstats.presentation
 
 import android.os.Bundle
@@ -5,6 +7,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -34,6 +38,7 @@ import com.example.chesstats.presentation.firstScreen.FirstScreenViewModel
 import com.example.chesstats.presentation.leaderboardScreen.LeaderBoardScreen
 import com.example.chesstats.presentation.leaderboardScreen.LeaderBoardViewModel
 import com.example.chesstats.ui.theme.ChesStatsTheme
+import com.example.chesstats.utils.NavAnimations
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,13 +55,72 @@ class MainActivity : ComponentActivity() {
 
             val controller = rememberNavController()
             ChesStatsTheme {
-
                 Scaffold(
-                    content = {
+                    bottomBar = {
+                        var selected by remember { mutableIntStateOf(0) }
+
+                        NavigationBar(
+                            containerColor = (Color(0XFF172734))
+                        ) {
+                            NavigationBarItem(
+                                selected = selected == 0,
+                                colors = NavigationBarItemDefaults.colors(
+                                    indicatorColor = Color(0XFF171434)
+                                ),
+                                icon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Search,
+                                        contentDescription = "Icon",
+                                        modifier = Modifier.size(40.dp),
+                                        tint = Color.White
+                                    )
+                                }, onClick = {
+                                    controller.navigate("FirstPlayerScreen")
+                                    selected = 0
+                                })
+
+                            NavigationBarItem(
+                                selected = selected == 1,
+                                colors = NavigationBarItemDefaults.colors(
+                                    indicatorColor = Color(0XFF171434)
+                                ),
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ranking),
+                                        contentDescription = "Icon",
+                                        modifier = Modifier.size(40.dp),
+                                        tint = Color.White
+                                    )
+                                }, onClick = {
+                                    controller.navigate("LeaderBoardScreen")
+                                    selected = 1
+                                })
+
+                            NavigationBarItem(
+                                selected = selected == 2,
+                                colors = NavigationBarItemDefaults.colors(
+                                    indicatorColor = Color(0XFF171434)
+                                ),
+                                icon = {
+                                    Image(
+                                        painter = painterResource(R.drawable.rapid),
+                                        contentDescription = "Icon", modifier = Modifier.size(40.dp)
+                                    )
+                                }, onClick = {
+                                    selected = 2
+                                })
+                        }
+                    }) { innerPadding ->
+
+                    SharedTransitionLayout(modifier = Modifier.padding(innerPadding)) {
                         NavHost(
                             navController = controller,
                             startDestination = "FirstPlayerScreen",
-                            modifier = Modifier.padding(it)
+                            modifier = Modifier,
+                            exitTransition = { NavAnimations.exitAnimation() },
+                            enterTransition = { NavAnimations.enterAnimation() },
+                            popExitTransition = { NavAnimations.popExitAnimation() },
+                            popEnterTransition = { NavAnimations.popEnterAnimation() }
                         ) {
 
                             composable("FirstPlayerScreen") {
@@ -65,64 +129,22 @@ class MainActivity : ComponentActivity() {
 
                             // Pantalla B
                             composable("LeaderBoardScreen") {
-                                LeaderBoardScreen(leaderBoardViewModel, controller)
+                                LeaderBoardScreen(leaderBoardViewModel, controller, this)
                             }
 
-                            composable("DetailPlayerScreen/{username}"){ backstackEntry ->
-                                val username = backstackEntry.arguments?.getString("username") ?: ""
-                                DetailPlayerScreen(username,
+                            composable("DetailPlayerScreen/{username}") { backstackEntry ->
+                                val username =
+                                    backstackEntry.arguments?.getString("username") ?: ""
+                                DetailPlayerScreen(
+                                    username,
                                     controller = controller,
-                                    detailPlayerViewModel = detailPlayerViewModel)
+                                    detailPlayerViewModel = detailPlayerViewModel,
+                                    animatedVisibilityScope = this
+                                )
                             }
                         }
-                    },
-
-                    bottomBar = {
-
-                        var selected by remember {mutableIntStateOf(0)}
-
-                        NavigationBar(
-                            containerColor = (Color(0XFF172734))
-                        ) {
-                            NavigationBarItem(selected = selected == 0,
-                                colors = NavigationBarItemDefaults.colors(
-                                    indicatorColor = Color(0XFF171434)
-                                ),
-                                icon = {
-                                    Icon(imageVector = Icons.Default.Search,
-                                        contentDescription = "Icon", modifier = Modifier.size(40.dp),
-                                        tint = Color.White
-                                        )
-                            }, onClick = {
-                                controller.navigate("FirstPlayerScreen")
-                                    selected = 0
-                                })
-
-                            NavigationBarItem(selected = selected == 1,
-                                colors = NavigationBarItemDefaults.colors(
-                                    indicatorColor = Color(0XFF171434)
-                                ),
-                                icon = {
-                                    Icon(painter = painterResource(R.drawable.ranking),
-                                        contentDescription = "Icon", modifier = Modifier.size(40.dp),
-                                        tint = Color.White)
-                                }, onClick = {
-                                    controller.navigate("LeaderBoardScreen")
-                                    selected = 1
-                                })
-
-                            NavigationBarItem(selected = selected == 2,
-                                colors = NavigationBarItemDefaults.colors(
-                                    indicatorColor = Color(0XFF171434)
-                                ),
-                                icon = {
-                                    Image(painter = painterResource(R.drawable.rapid),
-                                        contentDescription = "Icon", modifier = Modifier.size(40.dp))
-                                }, onClick = {
-                                    selected = 2
-                                })
-                        }
-                    })
+                    }
+                }
             }
         }
     }

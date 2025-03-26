@@ -58,12 +58,13 @@ fun FirstPlayerScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0XFF101B23))
-            .windowInsetsPadding(WindowInsets.systemBars),
+            .background(Color(0XFF101B23)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         var searchQuery by remember { mutableStateOf("") }
+
+        EditSpacer()
 
         Row(
             verticalAlignment = Alignment.Bottom,

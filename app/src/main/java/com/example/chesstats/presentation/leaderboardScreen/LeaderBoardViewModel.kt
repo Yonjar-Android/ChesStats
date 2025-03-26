@@ -26,9 +26,9 @@ class LeaderBoardViewModel @Inject constructor(
 
     private fun getLeaderBoards(){
         loading.value = true
+
         viewModelScope.launch {
             try {
-                loading.value = true
                 val leaderBoard = chessRepositoryImp.getLeaderBoards()
                 blitzPlayers.value = leaderBoard?.blitz
                 rapidPlayers.value = leaderBoard?.rapid

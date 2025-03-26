@@ -1,6 +1,11 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.example.chesstats.presentation.leaderboardScreen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
@@ -44,9 +49,10 @@ import com.example.chesstats.presentation.firstScreen.EditSpacer
 
 
 @Composable
-fun LeaderBoardScreen(
+fun SharedTransitionScope.LeaderBoardScreen(
     leaderBoardViewModel: LeaderBoardViewModel,
-    controller: NavController
+    controller: NavController,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
     val rapidPlayers by leaderBoardViewModel.rapidPlayers.collectAsState()
@@ -65,8 +71,6 @@ fun LeaderBoardScreen(
             .fillMaxSize()
             .background(Color(0XFF101B23))
     ) {
-
-
         TabRow(
             modifier = Modifier
                 .padding(10.dp)
@@ -121,35 +125,55 @@ fun LeaderBoardScreen(
 
         when (selectedTab.intValue) {
             0 -> {
-                LeaderBoardModeScreen(rapidPlayers, controller)
+                LeaderBoardModeScreen(
+                    rapidPlayers,
+                    controller,
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
             }
 
             1 -> {
-                LeaderBoardModeScreen(blitzPlayers, controller)
+                LeaderBoardModeScreen(
+                    blitzPlayers,
+                    controller,
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
             }
 
             2 -> {
-                LeaderBoardModeScreen(bulletPlayers, controller)
+                LeaderBoardModeScreen(
+                    bulletPlayers,
+                    controller,
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
             }
-        }
-
-        if (loading) {
-            ChargeScreen()
         }
     }
 
     BackHandler {}
+
+    if (loading) {
+        ChargeScreen()
+    }
 }
 
 @Composable
-fun LeaderBoardModeScreen(
+fun SharedTransitionScope.LeaderBoardModeScreen(
     players: List<ProfileDataModel>?,
-    controller: NavController
+    controller: NavController,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         players?.let {
             items(players) {
-                PlayerRankItem(it, controller = controller)
+                PlayerRankItem(
+                    it,
+                    controller = controller,
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
                 Spacer(modifier = Modifier.size(10.dp))
             }
         }
@@ -157,7 +181,11 @@ fun LeaderBoardModeScreen(
 }
 
 @Composable
-fun PlayerRankItem(player: ProfileDataModel, controller: NavController) {
+fun SharedTransitionScope.PlayerRankItem(
+    player: ProfileDataModel,
+    controller: NavController,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -177,6 +205,10 @@ fun PlayerRankItem(player: ProfileDataModel, controller: NavController) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(65.dp)
+                    .sharedElement(
+                        state = rememberSharedContentState(key = "image/${player.avatar}"),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
                     .clip(CircleShape)
             )
 
@@ -189,7 +221,11 @@ fun PlayerRankItem(player: ProfileDataModel, controller: NavController) {
                     fontSize = 16.sp,
                     color = Color.White,
                     textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.sharedElement(
+                        state = rememberSharedContentState(key = "username/${player.id}"),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
                 )
 
                 EditSpacer(2.dp)
