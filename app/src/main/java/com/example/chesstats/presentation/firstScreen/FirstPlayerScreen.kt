@@ -7,14 +7,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -46,6 +43,7 @@ import com.example.chesstats.R
 import com.example.chesstats.domain.models.ModeStats
 import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.presentation.extras.ChargeScreen
+import com.example.chesstats.presentation.extras.EditSpacer
 
 @Composable
 fun FirstPlayerScreen(
@@ -245,7 +243,7 @@ fun PlayerStatsInfo(player: PlayerDomainModel?) {
                 Image(
                     painter = painterResource(R.drawable.title),
                     contentDescription = "icon",
-                    modifier = Modifier.size(58.dp)
+                    modifier = Modifier.size(45.dp)
                 )
 
                 EditSpacer()
@@ -310,9 +308,3 @@ fun TextRating(chessMode: String, stats: ModeStats?) {
 
 }
 
-@Composable
-fun EditSpacer(
-    sizeDp: Dp = 10.dp
-) {
-    Spacer(modifier = Modifier.size(sizeDp))
-}

@@ -40,7 +40,7 @@ import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.presentation.extras.ChargeScreen
-import com.example.chesstats.presentation.firstScreen.EditSpacer
+import com.example.chesstats.presentation.extras.EditSpacer
 import com.example.chesstats.presentation.firstScreen.PlayerStatsInfo
 
 @Composable

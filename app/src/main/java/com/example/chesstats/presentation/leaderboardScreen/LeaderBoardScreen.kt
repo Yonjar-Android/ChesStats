@@ -8,9 +8,6 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.EaseInBounce
-import androidx.compose.animation.core.EaseInCirc
-import androidx.compose.animation.core.EaseInExpo
 import androidx.compose.animation.core.EaseInQuad
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -19,7 +16,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -50,7 +46,7 @@ import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.chesstats.data.models.ProfileDataModel
 import com.example.chesstats.presentation.extras.ChargeScreen
-import com.example.chesstats.presentation.firstScreen.EditSpacer
+import com.example.chesstats.presentation.extras.EditSpacer
 
 
 @Composable
@@ -179,7 +175,7 @@ fun SharedTransitionScope.LeaderBoardModeScreen(
                     controller = controller,
                     animatedVisibilityScope = animatedVisibilityScope
                 )
-                Spacer(modifier = Modifier.size(10.dp))
+                EditSpacer()
             }
         }
     }

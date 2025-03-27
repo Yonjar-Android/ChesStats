@@ -31,6 +31,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.chesstats.R
+import com.example.chesstats.presentation.chessStreamersScreen.ChessStreamersScreen
+import com.example.chesstats.presentation.chessStreamersScreen.ChessStreamersViewModel
 import com.example.chesstats.presentation.detailPlayerScreen.DetailPlayerScreen
 import com.example.chesstats.presentation.detailPlayerScreen.DetailPlayerViewModel
 import com.example.chesstats.presentation.firstScreen.FirstPlayerScreen
@@ -47,6 +49,7 @@ class MainActivity : ComponentActivity() {
     private val firstScreenViewModel: FirstScreenViewModel by viewModels()
     private val leaderBoardViewModel: LeaderBoardViewModel by viewModels()
     private val detailPlayerViewModel: DetailPlayerViewModel by viewModels()
+    private val chessStreamersViewModel: ChessStreamersViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,6 +110,7 @@ class MainActivity : ComponentActivity() {
                                         contentDescription = "Icon", modifier = Modifier.size(40.dp)
                                     )
                                 }, onClick = {
+                                    controller.navigate("ChessStreamersScreen")
                                     selected = 2
                                 })
                         }
@@ -140,6 +144,10 @@ class MainActivity : ComponentActivity() {
                                     detailPlayerViewModel = detailPlayerViewModel,
                                     animatedVisibilityScope = this
                                 )
+                            }
+
+                            composable("ChessStreamersScreen") {
+                                ChessStreamersScreen(chessStreamersViewModel)
                             }
                         }
                     }
