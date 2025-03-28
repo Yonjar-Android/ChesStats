@@ -114,7 +114,7 @@ fun SharedTransitionScope.PlayerDetailProfileInfo(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .sharedElement(
-                        state = rememberSharedContentState(key = "image/${player?.profileImage}"),
+                        state = rememberSharedContentState(key = "image/${player?.username?.lowercase()}"),
                         animatedVisibilityScope = animatedVisibilityScope,
                         boundsTransform = { _, _ -> tween(durationMillis = 250) }
                     )
@@ -135,7 +135,7 @@ fun SharedTransitionScope.PlayerDetailProfileInfo(
                 fontSize = 20.sp,
                 color = Color.White,
                 modifier = Modifier.sharedElement(
-                    state = rememberSharedContentState(key = "username/${player?.id}"),
+                    state = rememberSharedContentState(key = "username/${player?.username?.lowercase()}"),
                     animatedVisibilityScope = animatedVisibilityScope,
                     boundsTransform = { _, _ -> tween(durationMillis = 250) }
                 )

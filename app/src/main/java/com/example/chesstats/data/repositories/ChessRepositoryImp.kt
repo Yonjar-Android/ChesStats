@@ -39,7 +39,8 @@ class ChessRepositoryImp @Inject constructor(
 
     override suspend fun getStreamers(): List<StreamerModel>? {
         return try {
-            playerService.getStreamers().body()?.streamers
+            val streamers = playerService.getStreamers().body()?.streamers
+            streamers?.filter { it.isLive == true }
         } catch (e: Exception) {
             null
         }

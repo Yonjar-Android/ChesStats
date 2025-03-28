@@ -207,7 +207,7 @@ fun SharedTransitionScope.PlayerRankItem(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .sharedElement(
-                        state = rememberSharedContentState(key = "image/${player.avatar}"),
+                        state = rememberSharedContentState(key = "image/${player.username?.lowercase()}"),
                         animatedVisibilityScope = animatedVisibilityScope,
                         boundsTransform = { _, _ -> tween(durationMillis = 250) }
                     )
@@ -227,7 +227,7 @@ fun SharedTransitionScope.PlayerRankItem(
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.sharedElement(
-                        state = rememberSharedContentState(key = "username/${player.id}"),
+                        state = rememberSharedContentState(key = "username/${player.username?.lowercase()}"),
                         animatedVisibilityScope = animatedVisibilityScope,
                         boundsTransform = { _, _ ->
                             tween(durationMillis = 250)

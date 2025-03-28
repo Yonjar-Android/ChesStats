@@ -1,8 +1,14 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.example.chesstats.presentation.chessStreamersScreen
 
-import android.content.Intent
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,7 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.Uri
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.chesstats.R
 import com.example.chesstats.data.models.streamers.StreamerModel
@@ -45,7 +51,12 @@ import com.example.chesstats.presentation.extras.ChargeScreen
 import com.example.chesstats.presentation.extras.EditSpacer
 
 @Composable
-fun ChessStreamersScreen(chessStreamersViewModel: ChessStreamersViewModel) {
+fun SharedTransitionScope.ChessStreamersScreen(
+    chessStreamersViewModel:
+    ChessStreamersViewModel,
+    controller: NavController,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
 
     val streamers by chessStreamersViewModel.streamers.collectAsState()
 
@@ -67,7 +78,7 @@ fun ChessStreamersScreen(chessStreamersViewModel: ChessStreamersViewModel) {
 
         LazyColumn {
             items(streamers) { streamer ->
-                SteamerItem(streamer)
+                SteamerItem(streamer, controller, animatedVisibilityScope)
 
                 EditSpacer()
             }
@@ -79,14 +90,22 @@ fun ChessStreamersScreen(chessStreamersViewModel: ChessStreamersViewModel) {
 }
 
 @Composable
-fun SteamerItem(streamer: StreamerModel?) {
+fun SharedTransitionScope.SteamerItem(
+    streamer: StreamerModel?,
+    controller: NavController,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     var showDialog by remember { mutableStateOf(false) }
     var selectedUrl by remember { mutableStateOf("") }
 
     val uriHandler = LocalUriHandler.current
 
     Row(
-        modifier = Modifier.fillMaxWidth(fraction = 0.95f),
+        modifier = Modifier
+            .fillMaxWidth(fraction = 0.95f)
+            .clickable {
+                controller.navigate("DetailPlayerScreen/${streamer?.username}")
+            },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -98,6 +117,11 @@ fun SteamerItem(streamer: StreamerModel?) {
                 contentDescription = "profile picture",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
+                    .sharedElement(
+                        state = rememberSharedContentState(key = "image/${streamer?.username?.lowercase()}"),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = { _, _ -> tween(durationMillis = 250) }
+                    )
                     .size(65.dp)
                     .clip(CircleShape)
                     .border(width = 1.dp, color = Color.White, shape = CircleShape)
@@ -113,6 +137,11 @@ fun SteamerItem(streamer: StreamerModel?) {
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.sharedElement(
+                        state = rememberSharedContentState(key = "username/${streamer?.username?.lowercase()}"),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = { _, _ -> tween(durationMillis = 250) }
+                    )
                 )
 
                 EditSpacer(2.dp)
@@ -174,8 +203,9 @@ fun SteamerItem(streamer: StreamerModel?) {
         }
     }
 
-    if (showDialog){
-        OpenLinkDialog(selectedUrl, uriHandler,
+    if (showDialog) {
+        OpenLinkDialog(
+            selectedUrl, uriHandler,
             closeDialog = {
                 showDialog = false
             })
@@ -183,9 +213,9 @@ fun SteamerItem(streamer: StreamerModel?) {
 }
 
 @Composable
-fun OpenLinkDialog(url: String, uriHandler: UriHandler, closeDialog: () -> Unit){
+fun OpenLinkDialog(url: String, uriHandler: UriHandler, closeDialog: () -> Unit) {
     AlertDialog(
-        onDismissRequest = {  },
+        onDismissRequest = { },
         title = { Text("¿Abrir enlace externo?") },
         text = { Text("Serás redirigido a $url") },
         confirmButton = {

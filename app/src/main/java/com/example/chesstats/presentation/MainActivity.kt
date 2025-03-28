@@ -105,9 +105,11 @@ class MainActivity : ComponentActivity() {
                                     indicatorColor = Color(0XFF171434)
                                 ),
                                 icon = {
-                                    Image(
-                                        painter = painterResource(R.drawable.rapid),
-                                        contentDescription = "Icon", modifier = Modifier.size(40.dp)
+                                    Icon(
+                                        painter = painterResource(R.drawable.twitch),
+                                        contentDescription = "Icon",
+                                        modifier = Modifier.size(40.dp),
+                                        tint = Color.White
                                     )
                                 }, onClick = {
                                     controller.navigate("ChessStreamersScreen")
@@ -147,7 +149,11 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable("ChessStreamersScreen") {
-                                ChessStreamersScreen(chessStreamersViewModel)
+                                ChessStreamersScreen(
+                                    chessStreamersViewModel,
+                                    controller = controller,
+                                    animatedVisibilityScope = this
+                                    )
                             }
                         }
                     }
