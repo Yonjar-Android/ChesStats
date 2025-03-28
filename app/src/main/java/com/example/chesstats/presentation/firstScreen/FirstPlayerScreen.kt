@@ -1,20 +1,13 @@
 package com.example.chesstats.presentation.firstScreen
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,9 +34,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -93,7 +86,7 @@ fun FirstPlayerScreen(
                     .clip(RoundedCornerShape(20.dp))
                     .height(60.dp)
                     .testTag("tfSearch"),
-                placeholder = { Text("Buscar", color = Color.White) },
+                placeholder = { Text(stringResource(R.string.search_str), color = Color.White) },
                 singleLine = true,
                 colors = androidx.compose.material3.TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
@@ -153,20 +146,20 @@ fun PlayerProfileInfo(player: PlayerDomainModel?) {
     ) {
         var showZoom by remember { mutableStateOf(false) }
 
-            AsyncImage(
-                model = player?.profileImage,
-                contentDescription = "Profile Image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(160.dp)
-                    .clip(CircleShape)
-                    .border(width = 4.dp, color = Color.White, shape = CircleShape)
-                    .clickable{
-                        showZoom = true
-                    }
-            )
+        AsyncImage(
+            model = player?.profileImage,
+            contentDescription = "Profile Image",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(160.dp)
+                .clip(CircleShape)
+                .border(width = 4.dp, color = Color.White, shape = CircleShape)
+                .clickable {
+                    showZoom = true
+                }
+        )
 
-        if (showZoom){
+        if (showZoom) {
             ZoomProfileScreen(image = player?.profileImage) { showZoom = false }
         }
 
@@ -200,7 +193,7 @@ fun PlayerProfileInfo(player: PlayerDomainModel?) {
         }
 
         Text(
-            text = "Username: ${player?.username}",
+            text = "${stringResource(R.string.username_str)} ${player?.username}",
             fontSize = 14.sp,
             color = Color(0XFF8FB0CC),
             textAlign = TextAlign.Center
@@ -234,19 +227,19 @@ fun PlayerStatsInfo(player: PlayerDomainModel?) {
     ) {
         ChessModeItem(
             image = R.drawable.blitz,
-            chessMode = "Blitz",
+            chessMode = stringResource(R.string.blitz_str),
             chessStats = player?.eloStats?.blitzStats
         )
 
         ChessModeItem(
             image = R.drawable.rapid,
-            chessMode = "Rapid",
+            chessMode = stringResource(R.string.rapid_str),
             chessStats = player?.eloStats?.rapidStats
         )
 
         ChessModeItem(
             image = R.drawable.bullet,
-            chessMode = "Bullet",
+            chessMode = stringResource(R.string.bullet_str),
             chessStats = player?.eloStats?.bulletStats
         )
 
@@ -266,7 +259,7 @@ fun PlayerStatsInfo(player: PlayerDomainModel?) {
                 EditSpacer()
 
                 Text(
-                    text = "${player.title.titled} (${player.title.name})",
+                    text = "${stringResource(player.title.titled)} (${player.title.name})",
                     fontSize = 16.sp,
                     color = Color.White,
                     textAlign = TextAlign.Center,
@@ -315,7 +308,11 @@ fun TextRating(chessMode: String, stats: ModeStats?) {
         EditSpacer(2.dp)
 
         Text(
-            text = "$chessMode ( W: ${stats?.wins}, D: ${stats?.draws}, L: ${stats?.losses} )",
+            text = "$chessMode ( ${stringResource(R.string.wins_str)} ${stats?.wins}, ${
+                stringResource(
+                    R.string.draws_str
+                )
+            } ${stats?.draws}, ${stringResource(R.string.losses_str)} ${stats?.losses} )",
             fontSize = 14.sp,
             color = Color(0XFF8FB0CC),
             textAlign = TextAlign.Center

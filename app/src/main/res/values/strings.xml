@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">ChesStats</string>
+    <string name="search_str">Search</string>
+    <string name="username_str">Username:</string>
+    <string name="stats_str">Stats</string>
+    <string name="rapid_str">Rapid</string>
+    <string name="blitz_str">Blitz</string>
+    <string name="bullet_str">Bullet</string>
+    <string name="live_str">Live</string>
+    <string name="wins_str">W:</string>
+    <string name="draws_str">D:</string>
+    <string name="losses_str">L:</string>
+
+    <string name="title_grandmaster">Grandmaster</string>
+    <string name="title_international_master">International Master</string>
+    <string name="title_fide_master">FIDE Master</string>
+    <string name="title_candidate_master">Candidate Master</string>
+
+    <string name="title_women_grandmaster">Woman Grandmaster</string>
+    <string name="title_women_international_master">Woman International Master</string>
+    <string name="title_women_fide_master">Woman FIDE Master</string>
+    <string name="title_women_candidate_master">Woman Candidate Master</string>
+    <string name="title_national_master">National Master</string>
+    <string name="title_women_national_master">Woman National Master</string>
 </resources>

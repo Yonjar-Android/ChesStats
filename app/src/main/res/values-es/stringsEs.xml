@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ChesStats</string>
+    <string name="search_str">Buscar</string>
+    <string name="username_str">Nombre de Usuario:</string>
+    <string name="stats_str">Estadísticas</string>
+    <string name="rapid_str">Rápidas</string>
+    <string name="blitz_str">Blitz</string>
+    <string name="bullet_str">Bala</string>
+    <string name="live_str">En Directo</string>
+    <string name="wins_str">V:</string>
+    <string name="draws_str">E:</string>
+    <string name="losses_str">D:</string>
+
+    <!-- Títulos para hombres y mujeres -->
+    <string name="title_grandmaster">Gran Maestro</string>
+    <string name="title_international_master">Maestro Internacional</string>
+    <string name="title_fide_master">Maestro FIDE</string>
+    <string name="title_candidate_master">Maestro Candidato</string>
+
+    <!-- Títulos exclusivos para mujeres -->
+    <string name="title_women_grandmaster">Gran Maestra Femenina</string>
+    <string name="title_women_international_master">Maestra Internacional Femenina</string>
+    <string name="title_women_fide_master">Maestra FIDE</string>
+    <string name="title_women_candidate_master">Maestra Candidata</string>
+    <string name="title_national_master">Maestro Nacional</string>
+    <string name="title_women_national_master">Maestra Nacional</string>
+</resources>

@@ -38,12 +38,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.example.chesstats.R
 import com.example.chesstats.data.models.ProfileDataModel
 import com.example.chesstats.presentation.extras.ChargeScreen
 import com.example.chesstats.presentation.extras.DetailPlayerScreenNav
@@ -63,7 +65,9 @@ fun SharedTransitionScope.LeaderBoardScreen(
 
     val loading by leaderBoardViewModel.loading.collectAsState()
 
-    val tabs = listOf<String>("Blitz", "Rapid", "Bullet")
+    val tabs = listOf<String>(stringResource(R.string.blitz_str),
+        stringResource(R.string.rapid_str),
+        stringResource(R.string.bullet_str))
 
     val selectedTab = remember { mutableIntStateOf(0) }
 

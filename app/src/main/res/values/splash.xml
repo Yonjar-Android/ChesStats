@@ -2,7 +2,7 @@
 <resources>
     <style name="Base.Theme.SplashScreen." parent="Theme.SplashScreen.IconBackground">
         <item name="windowSplashScreenBackground">#fff</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/logosplash</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logoknight</item>
         <item name="postSplashScreenTheme">@style/Theme.ChesStats</item>
         <item name="windowSplashScreenIconBackgroundColor">#fff</item>
     </style>
