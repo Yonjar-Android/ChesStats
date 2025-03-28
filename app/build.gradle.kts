@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.daggerHilt)
+    kotlin("plugin.serialization") version "2.1.20"
     id("kotlin-kapt")
 }
 
@@ -89,6 +90,10 @@ dependencies {
     // Mockk
 
     testImplementation(libs.mockk)
+
+    // Kotlinx serialization
+    implementation(libs.kotlinx.serialization.json)
+
 }
 
 kapt {
