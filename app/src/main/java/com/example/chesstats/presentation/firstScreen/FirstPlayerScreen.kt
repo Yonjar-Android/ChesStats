@@ -1,12 +1,20 @@
 package com.example.chesstats.presentation.firstScreen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -44,6 +52,7 @@ import com.example.chesstats.domain.models.ModeStats
 import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.presentation.extras.ChargeScreen
 import com.example.chesstats.presentation.extras.EditSpacer
+import com.example.chesstats.presentation.extras.ZoomProfileScreen
 
 @Composable
 fun FirstPlayerScreen(
@@ -142,6 +151,7 @@ fun PlayerProfileInfo(player: PlayerDomainModel?) {
             .padding(vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        var showZoom by remember { mutableStateOf(false) }
 
             AsyncImage(
                 model = player?.profileImage,
@@ -151,7 +161,14 @@ fun PlayerProfileInfo(player: PlayerDomainModel?) {
                     .size(160.dp)
                     .clip(CircleShape)
                     .border(width = 4.dp, color = Color.White, shape = CircleShape)
+                    .clickable{
+                        showZoom = true
+                    }
             )
+
+        if (showZoom){
+            ZoomProfileScreen(image = player?.profileImage) { showZoom = false }
+        }
 
         EditSpacer()
 

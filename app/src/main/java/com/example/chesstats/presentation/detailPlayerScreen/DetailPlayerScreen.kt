@@ -9,6 +9,7 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +28,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +45,7 @@ import coil3.compose.AsyncImage
 import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.presentation.extras.ChargeScreen
 import com.example.chesstats.presentation.extras.EditSpacer
+import com.example.chesstats.presentation.extras.ZoomProfileScreen
 import com.example.chesstats.presentation.firstScreen.PlayerStatsInfo
 
 @Composable
@@ -108,6 +113,8 @@ fun SharedTransitionScope.PlayerDetailProfileInfo(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
+        var showZoom by remember { mutableStateOf(false) }
+
             AsyncImage(
                 model = player?.profileImage,
                 contentDescription = "Profile Image",
@@ -121,7 +128,12 @@ fun SharedTransitionScope.PlayerDetailProfileInfo(
                     .size(150.dp)
                     .clip(CircleShape)
                     .border(width = 4.dp, color = Color.White, shape = CircleShape)
+                    .clickable{ showZoom = true }
             )
+
+        if (showZoom){
+            ZoomProfileScreen(player?.profileImage) { showZoom = false }
+        }
 
         EditSpacer()
 
