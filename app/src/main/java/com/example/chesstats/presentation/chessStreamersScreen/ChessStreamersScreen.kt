@@ -48,6 +48,7 @@ import coil3.compose.AsyncImage
 import com.example.chesstats.R
 import com.example.chesstats.data.models.streamers.StreamerModel
 import com.example.chesstats.presentation.extras.ChargeScreen
+import com.example.chesstats.presentation.extras.DetailPlayerScreenNav
 import com.example.chesstats.presentation.extras.EditSpacer
 
 @Composable
@@ -104,7 +105,7 @@ fun SharedTransitionScope.SteamerItem(
         modifier = Modifier
             .fillMaxWidth(fraction = 0.95f)
             .clickable {
-                controller.navigate("DetailPlayerScreen/${streamer?.username}")
+                controller.navigate(DetailPlayerScreenNav(streamer?.username!!))
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

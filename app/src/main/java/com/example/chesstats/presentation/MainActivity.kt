@@ -9,7 +9,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -30,11 +29,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.chesstats.R
 import com.example.chesstats.presentation.chessStreamersScreen.ChessStreamersScreen
 import com.example.chesstats.presentation.chessStreamersScreen.ChessStreamersViewModel
 import com.example.chesstats.presentation.detailPlayerScreen.DetailPlayerScreen
 import com.example.chesstats.presentation.detailPlayerScreen.DetailPlayerViewModel
+import com.example.chesstats.presentation.extras.ChessStreamersScreenNav
+import com.example.chesstats.presentation.extras.DetailPlayerScreenNav
+import com.example.chesstats.presentation.extras.FirstPlayerScreenNav
+import com.example.chesstats.presentation.extras.LeaderBoardScreenNav
 import com.example.chesstats.presentation.firstScreen.FirstPlayerScreen
 import com.example.chesstats.presentation.firstScreen.FirstScreenViewModel
 import com.example.chesstats.presentation.leaderboardScreen.LeaderBoardScreen
@@ -78,7 +82,7 @@ class MainActivity : ComponentActivity() {
                                         tint = Color.White
                                     )
                                 }, onClick = {
-                                    controller.navigate("FirstPlayerScreen")
+                                    controller.navigate(FirstPlayerScreenNav)
                                     selected = 0
                                 })
 
@@ -95,7 +99,7 @@ class MainActivity : ComponentActivity() {
                                         tint = Color.White
                                     )
                                 }, onClick = {
-                                    controller.navigate("LeaderBoardScreen")
+                                    controller.navigate(LeaderBoardScreenNav)
                                     selected = 1
                                 })
 
@@ -112,7 +116,7 @@ class MainActivity : ComponentActivity() {
                                         tint = Color.White
                                     )
                                 }, onClick = {
-                                    controller.navigate("ChessStreamersScreen")
+                                    controller.navigate(ChessStreamersScreenNav)
                                     selected = 2
                                 })
                         }
@@ -121,34 +125,34 @@ class MainActivity : ComponentActivity() {
                     SharedTransitionLayout(modifier = Modifier.padding(innerPadding)) {
                         NavHost(
                             navController = controller,
-                            startDestination = "FirstPlayerScreen",
+                            startDestination = FirstPlayerScreenNav,
                             exitTransition = { NavAnimations.exitAnimation() },
                             enterTransition = { NavAnimations.enterAnimation() },
                             popExitTransition = { NavAnimations.popExitAnimation() },
                             popEnterTransition = { NavAnimations.popEnterAnimation() }
                         ) {
 
-                            composable("FirstPlayerScreen") {
+                            composable<FirstPlayerScreenNav> {
                                 FirstPlayerScreen(firstScreenViewModel)
                             }
 
                             // Pantalla B
-                            composable("LeaderBoardScreen") {
+                            composable<LeaderBoardScreenNav> {
                                 LeaderBoardScreen(leaderBoardViewModel, controller, this)
                             }
 
-                            composable("DetailPlayerScreen/{username}") { backstackEntry ->
-                                val username =
-                                    backstackEntry.arguments?.getString("username") ?: ""
+                            composable<DetailPlayerScreenNav> { backstackEntry ->
+                                val detail =
+                                    backstackEntry.toRoute<DetailPlayerScreenNav>()
                                 DetailPlayerScreen(
-                                    username,
+                                    detail.username,
                                     controller = controller,
                                     detailPlayerViewModel = detailPlayerViewModel,
                                     animatedVisibilityScope = this
                                 )
                             }
 
-                            composable("ChessStreamersScreen") {
+                            composable<ChessStreamersScreenNav> {
                                 ChessStreamersScreen(
                                     chessStreamersViewModel,
                                     controller = controller,

@@ -46,6 +46,7 @@ import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.chesstats.data.models.ProfileDataModel
 import com.example.chesstats.presentation.extras.ChargeScreen
+import com.example.chesstats.presentation.extras.DetailPlayerScreenNav
 import com.example.chesstats.presentation.extras.EditSpacer
 
 
@@ -192,7 +193,7 @@ fun SharedTransitionScope.PlayerRankItem(
             .fillMaxWidth()
             .padding(horizontal = 10.dp)
             .clickable {
-                controller.navigate("DetailPlayerScreen/${player.username}")
+                controller.navigate(DetailPlayerScreenNav(player.username!!))
             },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
