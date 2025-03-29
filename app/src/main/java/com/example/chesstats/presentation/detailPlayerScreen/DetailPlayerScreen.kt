@@ -11,12 +11,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -42,9 +46,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.example.chesstats.data.models.FlagModel
 import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.presentation.extras.ChargeScreen
 import com.example.chesstats.presentation.extras.EditSpacer
+import com.example.chesstats.presentation.extras.TooltipExample
 import com.example.chesstats.presentation.extras.ZoomProfileScreen
 import com.example.chesstats.presentation.firstScreen.PlayerStatsInfo
 
@@ -57,6 +63,8 @@ fun SharedTransitionScope.DetailPlayerScreen(
 ) {
 
     val player by detailPlayerViewModel.player.collectAsState()
+
+    val flagImage by detailPlayerViewModel.flagValue.collectAsState()
 
     val loading by detailPlayerViewModel.loading.collectAsState()
 
@@ -82,12 +90,12 @@ fun SharedTransitionScope.DetailPlayerScreen(
             }
         }
 
-
         EditSpacer(15.dp)
 
-        PlayerDetailProfileInfo(player, animatedVisibilityScope = animatedVisibilityScope)
-
-        EditSpacer(sizeDp = 40.dp)
+        PlayerDetailProfileInfo(
+            player, animatedVisibilityScope = animatedVisibilityScope,
+            flagImage = flagImage
+        )
 
         PlayerStatsInfo(player)
 
@@ -102,8 +110,12 @@ fun SharedTransitionScope.DetailPlayerScreen(
 @Composable
 fun SharedTransitionScope.PlayerDetailProfileInfo(
     player: PlayerDomainModel?,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    flagImage: FlagModel?
 ) {
+
+    var showToolTip by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth(fraction = 0.9f)
@@ -115,23 +127,23 @@ fun SharedTransitionScope.PlayerDetailProfileInfo(
 
         var showZoom by remember { mutableStateOf(false) }
 
-            AsyncImage(
-                model = player?.profileImage,
-                contentDescription = "Profile Image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .sharedElement(
-                        state = rememberSharedContentState(key = "image/${player?.username?.lowercase()}"),
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        boundsTransform = { _, _ -> tween(durationMillis = 250) }
-                    )
-                    .size(150.dp)
-                    .clip(CircleShape)
-                    .border(width = 4.dp, color = Color.White, shape = CircleShape)
-                    .clickable{ showZoom = true }
-            )
+        AsyncImage(
+            model = player?.profileImage,
+            contentDescription = "Profile Image",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .sharedElement(
+                    state = rememberSharedContentState(key = "image/${player?.username?.lowercase()}"),
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    boundsTransform = { _, _ -> tween(durationMillis = 250) }
+                )
+                .size(150.dp)
+                .clip(CircleShape)
+                .border(width = 4.dp, color = Color.White, shape = CircleShape)
+                .clickable { showZoom = true }
+        )
 
-        if (showZoom){
+        if (showZoom) {
             ZoomProfileScreen(player?.profileImage) { showZoom = false }
         }
 
@@ -175,6 +187,29 @@ fun SharedTransitionScope.PlayerDetailProfileInfo(
             color = Color(0XFF8FB0CC),
             textAlign = TextAlign.Center
         )
+
+
+        if (flagImage != null) {
+            Box {
+                AsyncImage(
+                    model = flagImage.flag.flagImage,
+                    contentDescription = "country's flag player",
+                    modifier = Modifier
+                        .width(100.dp).height(100.dp)
+                        .clickable { showToolTip = true })
+
+                if (showToolTip) {
+                    Box(
+                        modifier = Modifier.align(Alignment.BottomEnd)
+                            .offset(x = 16.dp, y = 16.dp)
+                            .size(50.dp)
+                    ) {
+                        TooltipExample(country = flagImage.country.name
+                        ) { showToolTip = !showToolTip }
+                    }
+                }
+            }
+        }
 
 
     }

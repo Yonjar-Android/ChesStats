@@ -5,16 +5,20 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -41,10 +45,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.chesstats.R
+import com.example.chesstats.data.models.FlagModel
 import com.example.chesstats.domain.models.ModeStats
 import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.presentation.extras.ChargeScreen
 import com.example.chesstats.presentation.extras.EditSpacer
+import com.example.chesstats.presentation.extras.TooltipExample
 import com.example.chesstats.presentation.extras.ZoomProfileScreen
 
 @Composable
@@ -54,12 +60,15 @@ fun FirstPlayerScreen(
 
     val player by hiltViewModel.player.collectAsState()
 
+    val flagImage by hiltViewModel.flagValue.collectAsState()
+
     val loading by hiltViewModel.loading.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0XFF101B23)),
+            .background(Color(0XFF101B23))
+            .verticalScroll(state = rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -119,9 +128,7 @@ fun FirstPlayerScreen(
 
         EditSpacer(15.dp)
 
-        PlayerProfileInfo(player)
-
-        EditSpacer(sizeDp = 40.dp)
+        PlayerProfileInfo(player, flagImage)
 
         PlayerStatsInfo(player)
 
@@ -135,7 +142,10 @@ fun FirstPlayerScreen(
 }
 
 @Composable
-fun PlayerProfileInfo(player: PlayerDomainModel?) {
+fun PlayerProfileInfo(player: PlayerDomainModel?, flagObject: FlagModel?) {
+
+    var showToolTip by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth(fraction = 0.9f)
@@ -199,7 +209,27 @@ fun PlayerProfileInfo(player: PlayerDomainModel?) {
             textAlign = TextAlign.Center
         )
 
+        if (flagObject != null) {
+            Box {
+                AsyncImage(
+                    model = flagObject.flag.flagImage,
+                    contentDescription = "country's flag player",
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clickable { showToolTip = true })
 
+                if (showToolTip) {
+                Box(
+                    modifier = Modifier.align(Alignment.BottomEnd)
+                        .offset(x = 16.dp, y = 16.dp)
+                        .size(50.dp)
+                ) {
+                        TooltipExample(country = flagObject.country.name
+                            ) { showToolTip = !showToolTip }
+                    }
+                }
+            }
+        }
     }
 }
 

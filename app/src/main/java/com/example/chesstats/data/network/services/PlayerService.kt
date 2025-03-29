@@ -1,6 +1,7 @@
 package com.example.chesstats.data.network.services
 
 import com.example.chesstats.data.models.ChessStats
+import com.example.chesstats.data.models.CountryModel
 import com.example.chesstats.data.models.LeaderBoardModel
 import com.example.chesstats.data.models.ProfileDataModel
 import com.example.chesstats.data.models.streamers.StreamerObjectAPI
@@ -21,5 +22,8 @@ interface PlayerService {
 
     @GET("pub/streamers")
     suspend fun getStreamers(): Response<StreamerObjectAPI>
+
+    @GET("pub/country/{code}")
+    suspend fun getCountry(@Path("code") countryCode: String): Response<CountryModel>
 
 }

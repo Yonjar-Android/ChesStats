@@ -1,6 +1,6 @@
 package com.example.chesstats.di
 
-import com.example.chesstats.data.network.services.PlayerService
+import com.example.chesstats.data.network.services.FlagService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,14 +12,14 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RetrofitModule {
+object RetrofitFlagModule {
 
-    private const val BASE_URL = "https://api.chess.com/"
+    private const val BASE_URL = "https://restcountries.com/v3.1/"
 
     @Provides
     @Singleton
-    @Named("ChessAPI")
-    fun provideRetrofit(): Retrofit{
+    @Named("FlagAPI")
+    fun provideFlagsRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -28,7 +28,8 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun providePlayerService(@Named("ChessAPI") retrofit: Retrofit): PlayerService {
-        return retrofit.create(PlayerService::class.java)
+    fun provideFlagService(@Named("FlagAPI") retrofit: Retrofit): FlagService {
+        return retrofit.create(FlagService::class.java)
     }
+
 }
