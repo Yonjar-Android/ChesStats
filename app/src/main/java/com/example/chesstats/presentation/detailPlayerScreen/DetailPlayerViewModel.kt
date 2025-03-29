@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.chesstats.data.models.FlagModel
 import com.example.chesstats.data.repositories.ChessRepositoryImp
 import com.example.chesstats.domain.models.PlayerDomainModel
+import com.example.chesstats.utils.ResultCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -13,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailPlayerViewModel @Inject constructor(
     private val chessRepositoryImp: ChessRepositoryImp
-): ViewModel() {
+) : ViewModel() {
 
     var player = MutableStateFlow<PlayerDomainModel?>(null)
 
@@ -21,40 +22,50 @@ class DetailPlayerViewModel @Inject constructor(
 
     var loading = MutableStateFlow<Boolean>(false)
 
-    fun searchPlayer(username:String){
+    fun searchPlayer(username: String) {
         loading.value = true
-        viewModelScope.launch{
-            try{
-                val playerSearch = chessRepositoryImp.getPlayerInfo(username)
+        viewModelScope.launch {
 
-                if(playerSearch != null){
-                    player.value = playerSearch
+            val response = chessRepositoryImp.getPlayerInfo(username)
+
+            when (response) {
+                is ResultCase.Error -> {
+
+                }
+
+                is ResultCase.Success -> {
+                    player.value = response.data
                     getFlag()
                 }
-            } catch(e:Exception){
-                println(e.message)
             }
-            finally {
-                loading.value = false
-            }
+
+            loading.value = false
+
         }
     }
 
     fun getFlag() {
         viewModelScope.launch {
-            try {
-                val country = chessRepositoryImp.getCountryFromPlayer(player.value?.country ?: "")
-                if (country != null) {
-                    val flagResponse = chessRepositoryImp.getFlag(country.name)
-                    if (flagResponse != null) {
-                        flagValue.value = flagResponse
+
+            val response = chessRepositoryImp.getCountryFromPlayer(player.value?.country ?: "")
+
+            when(response){
+                is ResultCase.Error -> {
+
+                }
+                is ResultCase.Success -> {
+                    val flagResponse = chessRepositoryImp.getFlag(response.data.name)
+
+                    when(flagResponse){
+                        is ResultCase.Error -> {
+
+                        }
+                        is ResultCase.Success -> {
+                            flagValue.value = flagResponse.data
+                        }
                     }
                 }
-
-            } catch (e: Exception) {
-                println(e.message)
             }
         }
     }
-
 }

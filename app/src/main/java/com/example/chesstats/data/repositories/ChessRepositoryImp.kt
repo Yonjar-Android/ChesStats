@@ -9,63 +9,95 @@ import com.example.chesstats.data.network.services.FlagService
 import com.example.chesstats.data.network.services.PlayerService
 import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.domain.repositories.ChessRepository
+import com.example.chesstats.utils.ResultCase
 import javax.inject.Inject
 
 class ChessRepositoryImp @Inject constructor(
     private val playerService: PlayerService,
-        private val flagService: FlagService
+    private val flagService: FlagService
 ) : ChessRepository {
-    override suspend fun getPlayerInfo(playerName: String): PlayerDomainModel? {
+    override suspend fun getPlayerInfo(playerName: String): ResultCase<PlayerDomainModel> {
+
         return try {
             val player = playerService.getPlayerInfo(playerName)
             val playerStats = playerService.getPlayerStatsInfo(playerName)
+
             if (player.body() == null || playerStats.body() == null) {
-                null
+                ResultCase.Error(message = "Error: No se encontró al jugador")
             } else {
-                PlayerMapper.playerDataModelToDomainModel(
-                    dataModel = player.body()!!,
-                    dataStats = playerStats.body()!!
+                ResultCase.Success(
+                    PlayerMapper.playerDataModelToDomainModel(
+                        dataModel = player.body()!!,
+                        dataStats = playerStats.body()!!
+                    )
                 )
             }
         } catch (e: Exception) {
-            null
+            ResultCase.Error("Error: ${e.message}")
         }
     }
 
-    override suspend fun getLeaderBoards(): LeaderBoardModel? {
+    override suspend fun getLeaderBoards(): ResultCase<LeaderBoardModel> {
         return try {
-            playerService.getLeaderBoards().body()
+            val leaderBoard = playerService.getLeaderBoards().body()
+            if (leaderBoard == null) {
+                ResultCase.Error("Error: No fue posible cargar los datos")
+            } else {
+                ResultCase.Success(
+                    leaderBoard
+                )
+            }
+
         } catch (e: Exception) {
-            null
+            ResultCase.Error("Error: ${e.message}")
         }
     }
 
-    override suspend fun getStreamers(): List<StreamerModel>? {
+    override suspend fun getStreamers(): ResultCase<List<StreamerModel>> {
         return try {
             val streamers = playerService.getStreamers().body()?.streamers
-            streamers?.filter { it.isLive == true }
-        } catch (e: Exception) {
-            null
+            if (streamers == null) {
+                ResultCase.Error("Error: No fue posible cargar los datos")
+            } else {
+                ResultCase.Success(streamers.filter { it.isLive == true })
+            }
         }
-    }
 
-    override suspend fun getCountryFromPlayer(endpoint: String): CountryModel? {
-        return try {
-            if (endpoint.isEmpty()) null
-            playerService.getCountry(endpoint.substringAfter("https://api.chess.com/pub/country/")).body()
-        } catch (e: Exception){
-            null
+     catch (e: Exception)
+    {
+        ResultCase.Error("Error: ${e.message}")
+    }
+}
+
+override suspend fun getCountryFromPlayer(endpoint: String): ResultCase<CountryModel> {
+    return try {
+        if (endpoint.isEmpty()) ResultCase.Error("Error: No fue posible cargar la bandera")
+        val countryCode = playerService.getCountry(endpoint.substringAfter("https://api.chess.com/pub/country/"))
+            .body()
+
+        if (countryCode == null){
+            ResultCase.Error("Error: No fue posible cargar la bandera")
+        } else {
+            ResultCase.Success(countryCode)
         }
+    } catch (e: Exception) {
+        ResultCase.Error("Error: ${e.message}")
     }
+}
 
-    override suspend fun getFlag(countryName: String): FlagModel? {
-        return try {
+override suspend fun getFlag(countryName: String): ResultCase<FlagModel?> {
+    return try {
 
-            if (countryName.isEmpty()) null
-            flagService.getCountry(countryName).body()?.get(0)
-        } catch (e: Exception){
-            println(e.message)
-            null
+        if (countryName.isEmpty()) null
+        val flag = flagService.getCountry(countryName).body()?.get(0)
+
+        if (flag == null){
+            ResultCase.Error("Error: No fue posible cargar la bandera")
+        }else{
+            ResultCase.Success(flag)
         }
+    } catch (e: Exception) {
+        ResultCase.Error("Error: ${e.message}")
     }
+}
 }

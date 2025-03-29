@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chesstats.data.models.ProfileDataModel
 import com.example.chesstats.data.repositories.ChessRepositoryImp
+import com.example.chesstats.utils.ResultCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -12,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LeaderBoardViewModel @Inject constructor(
     private val chessRepositoryImp: ChessRepositoryImp
-): ViewModel() {
+) : ViewModel() {
 
     var blitzPlayers = MutableStateFlow<List<ProfileDataModel>?>(emptyList())
     var rapidPlayers = MutableStateFlow<List<ProfileDataModel>?>(emptyList())
@@ -24,21 +25,24 @@ class LeaderBoardViewModel @Inject constructor(
         getLeaderBoards()
     }
 
-    private fun getLeaderBoards(){
+    private fun getLeaderBoards() {
         loading.value = true
 
         viewModelScope.launch {
-            try {
-                val leaderBoard = chessRepositoryImp.getLeaderBoards()
-                blitzPlayers.value = leaderBoard?.blitz
-                rapidPlayers.value = leaderBoard?.rapid
-                bulletPlayers.value = leaderBoard?.bullet
+            val leaderBoardResponse = chessRepositoryImp.getLeaderBoards()
 
-            } catch (e: Exception){
-                println(e.message)
-            } finally {
-                loading.value = false
+            when (leaderBoardResponse) {
+                is ResultCase.Error -> {
+
+                }
+                is ResultCase.Success -> {
+                    blitzPlayers.value = leaderBoardResponse.data.blitz
+                    rapidPlayers.value = leaderBoardResponse.data.rapid
+                    bulletPlayers.value = leaderBoardResponse.data.bullet
+                }
             }
+
+            loading.value = false
         }
     }
 }
