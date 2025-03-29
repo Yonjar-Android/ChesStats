@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,6 +51,7 @@ import com.example.chesstats.domain.models.ModeStats
 import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.presentation.extras.ChargeScreen
 import com.example.chesstats.presentation.extras.EditSpacer
+import com.example.chesstats.presentation.extras.PlayerStreamPlatforms
 import com.example.chesstats.presentation.extras.TooltipExample
 import com.example.chesstats.presentation.extras.ZoomProfileScreen
 
@@ -132,6 +134,10 @@ fun FirstPlayerScreen(
 
         PlayerStatsInfo(player)
 
+        EditSpacer(15.dp)
+
+        PlayerStreamPlatforms(player)
+
     }
 
     // Loading
@@ -210,22 +216,26 @@ fun PlayerProfileInfo(player: PlayerDomainModel?, flagObject: FlagModel?) {
         )
 
         if (flagObject != null) {
+            EditSpacer()
+
             Box {
                 AsyncImage(
                     model = flagObject.flag.flagImage,
                     contentDescription = "country's flag player",
                     modifier = Modifier
-                        .size(100.dp)
+                        .width(140.dp).height(70.dp)
                         .clickable { showToolTip = true })
 
                 if (showToolTip) {
-                Box(
-                    modifier = Modifier.align(Alignment.BottomEnd)
-                        .offset(x = 16.dp, y = 16.dp)
-                        .size(50.dp)
-                ) {
-                        TooltipExample(country = flagObject.country.name
-                            ) { showToolTip = !showToolTip }
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .offset(x = 16.dp, y = 16.dp)
+                            .size(50.dp)
+                    ) {
+                        TooltipExample(
+                            country = flagObject.country.name
+                        ) { showToolTip = !showToolTip }
                     }
                 }
             }
@@ -351,4 +361,6 @@ fun TextRating(chessMode: String, stats: ModeStats?) {
     }
 
 }
+
+
 

@@ -49,7 +49,8 @@ object PlayerMapper {
                     last = dataStats?.chessBullet?.last?.rating ?: 0,
                 )
             ),
-            title = TitledMasters.fromString(dataModel?.title)
+            title = TitledMasters.fromString(dataModel?.title),
+            platforms = dataModel?.streamingPlatforms
         )
     }
 }

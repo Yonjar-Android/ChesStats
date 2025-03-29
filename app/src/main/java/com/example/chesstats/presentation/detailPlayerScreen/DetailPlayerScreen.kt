@@ -21,8 +21,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -50,6 +52,7 @@ import com.example.chesstats.data.models.FlagModel
 import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.presentation.extras.ChargeScreen
 import com.example.chesstats.presentation.extras.EditSpacer
+import com.example.chesstats.presentation.extras.PlayerStreamPlatforms
 import com.example.chesstats.presentation.extras.TooltipExample
 import com.example.chesstats.presentation.extras.ZoomProfileScreen
 import com.example.chesstats.presentation.firstScreen.PlayerStatsInfo
@@ -75,7 +78,8 @@ fun SharedTransitionScope.DetailPlayerScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0XFF101B23)),
+            .background(Color(0XFF101B23))
+            .verticalScroll(state = rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -98,6 +102,10 @@ fun SharedTransitionScope.DetailPlayerScreen(
         )
 
         PlayerStatsInfo(player)
+
+        EditSpacer(15.dp)
+
+        PlayerStreamPlatforms(player)
 
         BackHandler {
             controller.navigateUp()
@@ -190,12 +198,15 @@ fun SharedTransitionScope.PlayerDetailProfileInfo(
 
 
         if (flagImage != null) {
+            EditSpacer()
+
             Box {
                 AsyncImage(
                     model = flagImage.flag.flagImage,
                     contentDescription = "country's flag player",
+                    contentScale = ContentScale.Fit,
                     modifier = Modifier
-                        .width(100.dp).height(100.dp)
+                        .width(120.dp).height(60.dp)
                         .clickable { showToolTip = true })
 
                 if (showToolTip) {

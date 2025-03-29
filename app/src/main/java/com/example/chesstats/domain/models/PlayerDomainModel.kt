@@ -1,5 +1,6 @@
 package com.example.chesstats.domain.models
 
+import com.example.chesstats.data.models.StreamPlatformModel
 import com.example.chesstats.presentation.firstScreen.TitledMasters
 
 data class PlayerDomainModel(
@@ -10,5 +11,6 @@ data class PlayerDomainModel(
     val username: String,
     val country: String,
     val eloStats: PlayerEloStats? = null,
-    val title: TitledMasters? = null
+    val title: TitledMasters? = null,
+    val platforms: List<StreamPlatformModel>?
 )
