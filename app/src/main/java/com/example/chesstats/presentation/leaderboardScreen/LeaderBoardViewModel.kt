@@ -21,6 +21,8 @@ class LeaderBoardViewModel @Inject constructor(
 
     var loading = MutableStateFlow<Boolean>(false)
 
+    var error = MutableStateFlow<String>("")
+
     init {
         getLeaderBoards()
     }
@@ -33,7 +35,9 @@ class LeaderBoardViewModel @Inject constructor(
 
             when (leaderBoardResponse) {
                 is ResultCase.Error -> {
-
+                    if (!leaderBoardResponse.message.isNullOrEmpty()){
+                        error.value = leaderBoardResponse.message
+                    }
                 }
                 is ResultCase.Success -> {
                     blitzPlayers.value = leaderBoardResponse.data.blitz
@@ -44,5 +48,9 @@ class LeaderBoardViewModel @Inject constructor(
 
             loading.value = false
         }
+    }
+
+    fun cleanError(){
+        error.value = ""
     }
 }

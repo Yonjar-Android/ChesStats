@@ -2,6 +2,7 @@
 
 package com.example.chesstats.presentation.leaderboardScreen
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -29,6 +30,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -38,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -59,11 +62,15 @@ fun SharedTransitionScope.LeaderBoardScreen(
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
+    val context = LocalContext.current
+
     val rapidPlayers by leaderBoardViewModel.rapidPlayers.collectAsState()
     val blitzPlayers by leaderBoardViewModel.blitzPlayers.collectAsState()
     val bulletPlayers by leaderBoardViewModel.bulletPlayers.collectAsState()
 
     val loading by leaderBoardViewModel.loading.collectAsState()
+
+    val error by leaderBoardViewModel.error.collectAsState()
 
     val tabs = listOf<String>(stringResource(R.string.blitz_str),
         stringResource(R.string.rapid_str),
@@ -71,6 +78,12 @@ fun SharedTransitionScope.LeaderBoardScreen(
 
     val selectedTab = remember { mutableIntStateOf(0) }
 
+    LaunchedEffect(error) {
+        if (error.isNotEmpty()){
+            Toast.makeText(context,error, Toast.LENGTH_SHORT).show()
+            leaderBoardViewModel.cleanError()
+        }
+    }
 
     Column(
         modifier = Modifier

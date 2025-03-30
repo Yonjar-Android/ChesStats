@@ -19,6 +19,8 @@ class ChessStreamersViewModel @Inject constructor(
 
     val loading = MutableStateFlow<Boolean>(false)
 
+    val error = MutableStateFlow<String>("")
+
     init {
         getStreamers()
     }
@@ -31,7 +33,7 @@ class ChessStreamersViewModel @Inject constructor(
 
             when (response){
                 is ResultCase.Error -> {
-
+                    if (!response.message.isNullOrEmpty()) error.value = response.message
                 }
                 is ResultCase.Success -> {
                     streamers.value = response.data
@@ -41,5 +43,9 @@ class ChessStreamersViewModel @Inject constructor(
             loading.value = false
 
         }
+    }
+
+    fun cleanError(){
+        error.value = ""
     }
 }

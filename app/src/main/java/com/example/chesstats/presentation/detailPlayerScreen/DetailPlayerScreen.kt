@@ -2,6 +2,7 @@
 
 package com.example.chesstats.presentation.detailPlayerScreen
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -42,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -71,8 +73,17 @@ fun SharedTransitionScope.DetailPlayerScreen(
 
     val loading by detailPlayerViewModel.loading.collectAsState()
 
+    val error by detailPlayerViewModel.error.collectAsState()
+
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         detailPlayerViewModel.searchPlayer(username)
+    }
+
+    LaunchedEffect(error) {
+        if (error.isNotEmpty()) Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+        detailPlayerViewModel.cleanError()
     }
 
     Column(

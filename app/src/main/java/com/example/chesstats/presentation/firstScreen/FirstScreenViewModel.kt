@@ -23,6 +23,8 @@ class FirstScreenViewModel @Inject constructor(
 
     var loading = MutableStateFlow<Boolean>(false)
 
+    var error = MutableStateFlow<String>("")
+
     init {
         viewModelScope.launch {
             searchPlayer("magnuscarlsen")
@@ -38,7 +40,9 @@ class FirstScreenViewModel @Inject constructor(
 
             when (response) {
                 is ResultCase.Error -> {
-
+                    if (!response.message.isNullOrEmpty()) {
+                        error.value = response.message
+                    }
                 }
 
                 is ResultCase.Success<PlayerDomainModel> -> {
@@ -56,16 +60,22 @@ class FirstScreenViewModel @Inject constructor(
 
             val response = chessRepositoryImp.getCountryFromPlayer(player.value?.country ?: "")
 
-            when(response){
+            when (response) {
                 is ResultCase.Error -> {
-
+                    if (!response.message.isNullOrEmpty()) {
+                        error.value = response.message
+                    }
                 }
+
                 is ResultCase.Success<CountryModel> -> {
                     val flagResponse = chessRepositoryImp.getFlag(response.data.name)
-                    when(flagResponse){
+                    when (flagResponse) {
                         is ResultCase.Error -> {
-
+                            if (!flagResponse.message.isNullOrEmpty()) {
+                                error.value = flagResponse.message
+                            }
                         }
+
                         is ResultCase.Success -> {
                             flagValue.value = flagResponse.data
                         }
@@ -73,5 +83,9 @@ class FirstScreenViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun cleanError(){
+        error.value = ""
     }
 }

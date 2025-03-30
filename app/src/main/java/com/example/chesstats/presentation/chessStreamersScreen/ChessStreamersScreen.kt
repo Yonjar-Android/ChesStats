@@ -2,6 +2,7 @@
 
 package com.example.chesstats.presentation.chessStreamersScreen
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -26,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.painterResource
@@ -63,7 +66,16 @@ fun SharedTransitionScope.ChessStreamersScreen(
 
     val loading by chessStreamersViewModel.loading.collectAsState()
 
+    val error by chessStreamersViewModel.error.collectAsState()
 
+    val context = LocalContext.current
+
+    LaunchedEffect(error) {
+        if (error.isNotEmpty()){
+            Toast.makeText(context,error, Toast.LENGTH_SHORT).show()
+            chessStreamersViewModel.cleanError()
+        }
+    }
 
     Column(
         modifier = Modifier
