@@ -6,17 +6,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,15 +44,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.example.chesstats.R
-import com.example.chesstats.data.models.FlagModel
 import com.example.chesstats.domain.models.ModeStats
 import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.presentation.extras.ChargeScreen
 import com.example.chesstats.presentation.extras.EditSpacer
 import com.example.chesstats.presentation.extras.PlayerStreamPlatforms
-import com.example.chesstats.presentation.extras.TooltipExample
 import com.example.chesstats.presentation.extras.ZoomProfileScreen
 
 @Composable
@@ -63,22 +59,18 @@ fun FirstPlayerScreen(
     hiltViewModel: FirstScreenViewModel
 ) {
 
-    val player by hiltViewModel.player.collectAsState()
+    val player by hiltViewModel.player.collectAsStateWithLifecycle()
 
-    val loading by hiltViewModel.loading.collectAsState()
+    val loading by hiltViewModel.loading.collectAsStateWithLifecycle()
 
-    val error by hiltViewModel.error.collectAsState()
+    val error by hiltViewModel.error.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
 
-
-    LaunchedEffect(error) {
-        if (error.isNotEmpty()) {
+    if (error.isNotEmpty()) {
             Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-            hiltViewModel.cleanError()
-        }
+            hiltViewModel.cleanError() }
 
-    }
 
     Column(
         modifier = Modifier
@@ -163,9 +155,6 @@ fun FirstPlayerScreen(
 
 @Composable
 fun PlayerProfileInfo(player: PlayerDomainModel?) {
-
-    var showToolTip by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier
             .fillMaxWidth(fraction = 0.9f)

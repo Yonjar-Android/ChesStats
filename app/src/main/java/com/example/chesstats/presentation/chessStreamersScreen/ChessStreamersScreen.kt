@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.chesstats.R
@@ -61,12 +62,11 @@ fun SharedTransitionScope.ChessStreamersScreen(
     controller: NavController,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
+    val streamers by chessStreamersViewModel.streamers.collectAsStateWithLifecycle()
 
-    val streamers by chessStreamersViewModel.streamers.collectAsState()
+    val loading by chessStreamersViewModel.loading.collectAsStateWithLifecycle()
 
-    val loading by chessStreamersViewModel.loading.collectAsState()
-
-    val error by chessStreamersViewModel.error.collectAsState()
+    val error by chessStreamersViewModel.error.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
 

@@ -3,12 +3,12 @@ package com.example.chesstats.presentation.firstScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chesstats.data.models.CountryModel
-import com.example.chesstats.data.models.FlagModel
 import com.example.chesstats.data.repositories.ChessRepositoryImp
 import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.utils.ResultCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,11 +17,14 @@ class FirstScreenViewModel @Inject constructor(
     private val chessRepositoryImp: ChessRepositoryImp
 ) : ViewModel() {
 
-    var player = MutableStateFlow<PlayerDomainModel?>(null)
+    private var _player = MutableStateFlow<PlayerDomainModel?>(null)
+    val player: StateFlow<PlayerDomainModel?> = _player
 
-    var loading = MutableStateFlow<Boolean>(false)
+    private var _loading = MutableStateFlow<Boolean>(false)
+    val loading: StateFlow<Boolean> = _loading
 
-    var error = MutableStateFlow<String>("")
+    private var _error = MutableStateFlow<String>("")
+    val error: StateFlow<String> = _error
 
     init {
         viewModelScope.launch {
@@ -31,7 +34,7 @@ class FirstScreenViewModel @Inject constructor(
     }
 
     fun searchPlayer(username: String) {
-        loading.value = true
+        _loading.value = true
         viewModelScope.launch {
 
             val response = chessRepositoryImp.getPlayerInfo(username)
@@ -39,34 +42,34 @@ class FirstScreenViewModel @Inject constructor(
             when (response) {
                 is ResultCase.Error -> {
                     if (!response.message.isNullOrEmpty()) {
-                        error.value = response.message
+                        _error.value = response.message
                     }
                 }
 
                 is ResultCase.Success<PlayerDomainModel> -> {
-                    player.value = response.data
+                    _player.value = response.data
                     getCountry()
                 }
 
             }
-            loading.value = false
+            _loading.value = false
         }
     }
 
     fun getCountry() {
         viewModelScope.launch {
 
-            val response = chessRepositoryImp.getCountryFromPlayer(player.value?.country ?: "")
+            val response = chessRepositoryImp.getCountryFromPlayer(_player.value?.country ?: "")
 
             when (response) {
                 is ResultCase.Error -> {
                     if (!response.message.isNullOrEmpty()) {
-                        error.value = response.message
+                        _error.value = response.message
                     }
                 }
 
                 is ResultCase.Success<CountryModel> -> {
-                    player.value = player.value?.copy(
+                    _player.value = _player.value?.copy(
                         countryName = response.data.name
                     )
                 }
@@ -75,6 +78,6 @@ class FirstScreenViewModel @Inject constructor(
     }
 
     fun cleanError(){
-        error.value = ""
+        _error.value = ""
     }
 }

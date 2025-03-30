@@ -8,6 +8,7 @@ import com.example.chesstats.domain.models.PlayerDomainModel
 import com.example.chesstats.utils.ResultCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,14 +17,17 @@ class DetailPlayerViewModel @Inject constructor(
     private val chessRepositoryImp: ChessRepositoryImp
 ) : ViewModel() {
 
-    var player = MutableStateFlow<PlayerDomainModel?>(null)
+    private var _player = MutableStateFlow<PlayerDomainModel?>(null)
+    val player: StateFlow<PlayerDomainModel?> = _player
 
-    var loading = MutableStateFlow<Boolean>(false)
+    private var _loading = MutableStateFlow<Boolean>(false)
+    val loading: StateFlow<Boolean> = _loading
 
-    var error = MutableStateFlow<String>("")
+    private var _error = MutableStateFlow<String>("")
+    val error: StateFlow<String> = _error
 
     fun searchPlayer(username: String) {
-        loading.value = true
+        _loading.value = true
         viewModelScope.launch {
 
             val response = chessRepositoryImp.getPlayerInfo(username)
@@ -31,22 +35,22 @@ class DetailPlayerViewModel @Inject constructor(
             when (response) {
                 is ResultCase.Error -> {
                     if (!response.message.isNullOrEmpty()) {
-                        error.value = response.message
+                        _error.value = response.message
                     }
                 }
 
                 is ResultCase.Success -> {
-                    player.value = response.data
-                    getFlag()
+                    _player.value = response.data
+                    getCountry()
                 }
             }
 
-            loading.value = false
+            _loading.value = false
 
         }
     }
 
-    fun getFlag() {
+    fun getCountry() {
         viewModelScope.launch {
 
             val response = chessRepositoryImp.getCountryFromPlayer(player.value?.country ?: "")
@@ -54,12 +58,12 @@ class DetailPlayerViewModel @Inject constructor(
             when (response) {
                 is ResultCase.Error -> {
                     if (!response.message.isNullOrEmpty()) {
-                        error.value = response.message
+                        _error.value = response.message
                     }
                 }
 
                 is ResultCase.Success -> {
-                    player.value = player.value?.copy(countryName = response.data.name)
+                    _player.value = player.value?.copy(countryName = response.data.name)
 
                 }
             }
@@ -67,6 +71,6 @@ class DetailPlayerViewModel @Inject constructor(
     }
 
     fun cleanError() {
-        error.value = ""
+        _error.value = ""
     }
 }

@@ -45,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.chesstats.R
@@ -62,12 +63,11 @@ fun SharedTransitionScope.DetailPlayerScreen(
     controller: NavController,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
+    val player by detailPlayerViewModel.player.collectAsStateWithLifecycle()
 
-    val player by detailPlayerViewModel.player.collectAsState()
+    val loading by detailPlayerViewModel.loading.collectAsStateWithLifecycle()
 
-    val loading by detailPlayerViewModel.loading.collectAsState()
-
-    val error by detailPlayerViewModel.error.collectAsState()
+    val error by detailPlayerViewModel.error.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
 

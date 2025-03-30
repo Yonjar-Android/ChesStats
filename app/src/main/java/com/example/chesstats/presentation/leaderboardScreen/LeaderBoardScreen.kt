@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.chesstats.R
@@ -64,13 +65,13 @@ fun SharedTransitionScope.LeaderBoardScreen(
 
     val context = LocalContext.current
 
-    val rapidPlayers by leaderBoardViewModel.rapidPlayers.collectAsState()
-    val blitzPlayers by leaderBoardViewModel.blitzPlayers.collectAsState()
-    val bulletPlayers by leaderBoardViewModel.bulletPlayers.collectAsState()
+    val rapidPlayers by leaderBoardViewModel.rapidPlayers.collectAsStateWithLifecycle()
+    val blitzPlayers by leaderBoardViewModel.blitzPlayers.collectAsStateWithLifecycle()
+    val bulletPlayers by leaderBoardViewModel.bulletPlayers.collectAsStateWithLifecycle()
 
-    val loading by leaderBoardViewModel.loading.collectAsState()
+    val loading by leaderBoardViewModel.loading.collectAsStateWithLifecycle()
 
-    val error by leaderBoardViewModel.error.collectAsState()
+    val error by leaderBoardViewModel.error.collectAsStateWithLifecycle()
 
     val tabs = listOf<String>(stringResource(R.string.blitz_str),
         stringResource(R.string.rapid_str),

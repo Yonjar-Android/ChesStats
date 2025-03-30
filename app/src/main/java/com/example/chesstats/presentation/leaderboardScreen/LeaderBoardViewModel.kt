@@ -7,6 +7,7 @@ import com.example.chesstats.data.repositories.ChessRepositoryImp
 import com.example.chesstats.utils.ResultCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,16 +20,18 @@ class LeaderBoardViewModel @Inject constructor(
     var rapidPlayers = MutableStateFlow<List<ProfileDataModel>?>(emptyList())
     var bulletPlayers = MutableStateFlow<List<ProfileDataModel>?>(emptyList())
 
-    var loading = MutableStateFlow<Boolean>(false)
+    private var _loading = MutableStateFlow<Boolean>(false)
+    val loading: StateFlow<Boolean> = _loading
 
-    var error = MutableStateFlow<String>("")
+    private var _error = MutableStateFlow<String>("")
+    val error: StateFlow<String> = _error
 
     init {
         getLeaderBoards()
     }
 
     private fun getLeaderBoards() {
-        loading.value = true
+        _loading.value = true
 
         viewModelScope.launch {
             val leaderBoardResponse = chessRepositoryImp.getLeaderBoards()
@@ -36,7 +39,7 @@ class LeaderBoardViewModel @Inject constructor(
             when (leaderBoardResponse) {
                 is ResultCase.Error -> {
                     if (!leaderBoardResponse.message.isNullOrEmpty()){
-                        error.value = leaderBoardResponse.message
+                        _error.value = leaderBoardResponse.message
                     }
                 }
                 is ResultCase.Success -> {
@@ -46,11 +49,11 @@ class LeaderBoardViewModel @Inject constructor(
                 }
             }
 
-            loading.value = false
+            _loading.value = false
         }
     }
 
     fun cleanError(){
-        error.value = ""
+        _error.value = ""
     }
 }
