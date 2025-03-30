@@ -25,4 +25,5 @@
     <string name="title_women_candidate_master">Maestra Candidata</string>
     <string name="title_national_master">Maestro Nacional</string>
     <string name="title_women_national_master">Maestra Nacional</string>
+    <string name="country_str">País:</string>
 </resources>

@@ -16,5 +16,4 @@ interface ChessRepository {
 
     suspend fun getCountryFromPlayer(endpoint: String): ResultCase<CountryModel?>
 
-    suspend fun getFlag(countryName: String): ResultCase<FlagModel?>
 }

@@ -12,5 +12,6 @@ data class PlayerDomainModel(
     val country: String,
     val eloStats: PlayerEloStats? = null,
     val title: TitledMasters? = null,
-    val platforms: List<StreamPlatformModel>?
+    val platforms: List<StreamPlatformModel>?,
+    val countryName:String = ""
 )

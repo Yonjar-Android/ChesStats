@@ -65,8 +65,6 @@ fun FirstPlayerScreen(
 
     val player by hiltViewModel.player.collectAsState()
 
-    val flagImage by hiltViewModel.flagValue.collectAsState()
-
     val loading by hiltViewModel.loading.collectAsState()
 
     val error by hiltViewModel.error.collectAsState()
@@ -75,8 +73,8 @@ fun FirstPlayerScreen(
 
 
     LaunchedEffect(error) {
-        if (error.isNotEmpty()){
-            Toast.makeText(context,error,Toast.LENGTH_SHORT).show()
+        if (error.isNotEmpty()) {
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
             hiltViewModel.cleanError()
         }
 
@@ -146,7 +144,7 @@ fun FirstPlayerScreen(
 
         EditSpacer(15.dp)
 
-        PlayerProfileInfo(player, flagImage)
+        PlayerProfileInfo(player)
 
         PlayerStatsInfo(player)
 
@@ -164,7 +162,7 @@ fun FirstPlayerScreen(
 }
 
 @Composable
-fun PlayerProfileInfo(player: PlayerDomainModel?, flagObject: FlagModel?) {
+fun PlayerProfileInfo(player: PlayerDomainModel?) {
 
     var showToolTip by remember { mutableStateOf(false) }
 
@@ -231,33 +229,17 @@ fun PlayerProfileInfo(player: PlayerDomainModel?, flagObject: FlagModel?) {
             textAlign = TextAlign.Center
         )
 
-        if (flagObject != null) {
-            EditSpacer()
-
-            Box {
-                AsyncImage(
-                    model = flagObject.flag.flagImage,
-                    contentDescription = "country's flag player",
-                    modifier = Modifier
-                        .width(140.dp).height(70.dp)
-                        .clickable { showToolTip = true })
-
-                if (showToolTip) {
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .offset(x = 16.dp, y = 16.dp)
-                            .size(50.dp)
-                    ) {
-                        TooltipExample(
-                            country = flagObject.country.name
-                        ) { showToolTip = !showToolTip }
-                    }
-                }
-            }
+        if (player?.countryName?.isNotEmpty() == true){
+            Text(
+                text = "${stringResource(R.string.country_str)} ${player.countryName}",
+                fontSize = 14.sp,
+                color = Color(0XFF8FB0CC),
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
+
 
 @Composable
 fun PlayerStatsInfo(player: PlayerDomainModel?) {
