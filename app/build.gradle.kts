@@ -79,6 +79,9 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
 
+    // Kotlinx serialization
+    implementation(libs.kotlinx.serialization.json)
+
     // Compose Animation
 
     implementation(libs.androidx.animation)
@@ -91,8 +94,9 @@ dependencies {
 
     testImplementation(libs.mockk)
 
-    // Kotlinx serialization
-    implementation(libs.kotlinx.serialization.json)
+    // Turbine
+
+    testImplementation(libs.turbine)
 
 }
 
