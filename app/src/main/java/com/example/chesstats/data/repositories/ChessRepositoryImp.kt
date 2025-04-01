@@ -15,7 +15,6 @@ class ChessRepositoryImp @Inject constructor(
     private val playerService: PlayerService
 ) : ChessRepository {
     override suspend fun getPlayerInfo(playerName: String): ResultCase<PlayerDomainModel> {
-
         return try {
             val player = playerService.getPlayerInfo(playerName)
             val playerStats = playerService.getPlayerStatsInfo(playerName)
@@ -25,8 +24,8 @@ class ChessRepositoryImp @Inject constructor(
             } else {
                 ResultCase.Success(
                     PlayerMapper.playerDataModelToDomainModel(
-                        dataModel = player.body()!!,
-                        dataStats = playerStats.body()!!
+                        dataModel = player.body(),
+                        dataStats = playerStats.body()
                     )
                 )
             }
@@ -66,15 +65,18 @@ class ChessRepositoryImp @Inject constructor(
 
     override suspend fun getCountryFromPlayer(endpoint: String): ResultCase<CountryModel> {
         return try {
-            if (endpoint.isEmpty()) ResultCase.Error("Error: No fue posible cargar la bandera")
-            val countryCode =
-                playerService.getCountry(endpoint.substringAfter("https://api.chess.com/pub/country/"))
-                    .body()
+            if (endpoint.isEmpty()) {
+                ResultCase.Error("Error: No fue posible cargar el pais")
+            } else{
+                val countryCode =
+                    playerService.getCountry(endpoint.substringAfter("https://api.chess.com/pub/country/"))
+                        .body()
 
-            if (countryCode == null) {
-                ResultCase.Error("Error: No fue posible cargar la bandera")
-            } else {
-                ResultCase.Success(countryCode)
+                if (countryCode == null) {
+                    ResultCase.Error("Error: No fue posible cargar el pais")
+                } else {
+                    ResultCase.Success(countryCode)
+                }
             }
         } catch (e: Exception) {
             ResultCase.Error("Error: ${e.message}")
