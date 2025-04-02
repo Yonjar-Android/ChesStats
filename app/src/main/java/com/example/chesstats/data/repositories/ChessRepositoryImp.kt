@@ -2,7 +2,6 @@ package com.example.chesstats.data.repositories
 
 import com.example.chesstats.data.mappers.PlayerMapper
 import com.example.chesstats.data.models.CountryModel
-import com.example.chesstats.data.models.FlagModel
 import com.example.chesstats.data.models.LeaderBoardModel
 import com.example.chesstats.data.models.streamers.StreamerModel
 import com.example.chesstats.data.network.services.PlayerService

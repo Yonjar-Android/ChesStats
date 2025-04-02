@@ -1,6 +1,8 @@
 package com.example.chesstats.di
 
 import com.example.chesstats.data.network.services.PlayerService
+import com.example.chesstats.data.repositories.ChessRepositoryImp
+import com.example.chesstats.domain.repositories.ChessRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,5 +32,11 @@ object RetrofitModule {
     @Singleton
     fun providePlayerService(@Named("ChessAPI") retrofit: Retrofit): PlayerService {
         return retrofit.create(PlayerService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRepository(playerService: PlayerService): ChessRepository{
+        return ChessRepositoryImp(playerService)
     }
 }

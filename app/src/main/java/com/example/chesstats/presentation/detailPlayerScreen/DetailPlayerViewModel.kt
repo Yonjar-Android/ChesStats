@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.chesstats.data.models.FlagModel
 import com.example.chesstats.data.repositories.ChessRepositoryImp
 import com.example.chesstats.domain.models.PlayerDomainModel
+import com.example.chesstats.domain.repositories.ChessRepository
 import com.example.chesstats.utils.ResultCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailPlayerViewModel @Inject constructor(
-    private val chessRepositoryImp: ChessRepositoryImp
+    private val chessRepositoryImp: ChessRepository
 ) : ViewModel() {
 
     private var _player = MutableStateFlow<PlayerDomainModel?>(null)
@@ -63,7 +64,7 @@ class DetailPlayerViewModel @Inject constructor(
                 }
 
                 is ResultCase.Success -> {
-                    _player.value = player.value?.copy(countryName = response.data.name)
+                    _player.value = player.value?.copy(countryName = response.data?.name ?: "")
 
                 }
             }

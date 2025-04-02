@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chesstats.data.models.LeaderBoardModel
 import com.example.chesstats.data.repositories.ChessRepositoryImp
+import com.example.chesstats.domain.repositories.ChessRepository
 import com.example.chesstats.utils.ResultCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LeaderBoardViewModel @Inject constructor(
-    private val chessRepositoryImp: ChessRepositoryImp
+    private val chessRepositoryImp: ChessRepository
 ) : ViewModel() {
 
     var leaderBoardLists = MutableStateFlow<LeaderBoardModel?>(null)

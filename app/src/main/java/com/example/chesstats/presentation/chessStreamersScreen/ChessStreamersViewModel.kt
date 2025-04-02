@@ -3,7 +3,7 @@ package com.example.chesstats.presentation.chessStreamersScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chesstats.data.models.streamers.StreamerModel
-import com.example.chesstats.data.repositories.ChessRepositoryImp
+import com.example.chesstats.domain.repositories.ChessRepository
 import com.example.chesstats.utils.ResultCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChessStreamersViewModel @Inject constructor(
-    private val chessRepositoryImp: ChessRepositoryImp
+    private val chessRepositoryImp: ChessRepository
 ) : ViewModel() {
 
     val streamers = MutableStateFlow<List<StreamerModel>>(emptyList())
@@ -39,7 +39,7 @@ class ChessStreamersViewModel @Inject constructor(
                     if (!response.message.isNullOrEmpty()) _error.value = response.message
                 }
                 is ResultCase.Success -> {
-                    streamers.value = response.data
+                    streamers.value = response.data ?: listOf()
                 }
             }
 

@@ -4,6 +4,7 @@ import app.cash.turbine.turbineScope
 import com.example.chesstats.MotherObject
 import com.example.chesstats.data.models.streamers.StreamerModel
 import com.example.chesstats.data.repositories.ChessRepositoryImp
+import com.example.chesstats.domain.repositories.ChessRepository
 import com.example.chesstats.utils.ResultCase
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -27,7 +28,7 @@ import org.junit.Test
 class ChessStreamersViewModelTest {
 
     @MockK
-    lateinit var chessRepositoryImp: ChessRepositoryImp
+    lateinit var chessRepositoryImp: ChessRepository
 
     lateinit var chessStreamersViewModel: ChessStreamersViewModel
 
