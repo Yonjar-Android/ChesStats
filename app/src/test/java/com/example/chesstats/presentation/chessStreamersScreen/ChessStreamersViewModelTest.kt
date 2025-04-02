@@ -15,7 +15,6 @@ import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -46,7 +45,7 @@ class ChessStreamersViewModelTest {
     }
 
     @Test
-    fun `getStreamers WHEN successful THEN updates leaderBoardLists and loading state`() = runTest {
+    fun `getStreamers WHEN successful THEN updates streamers and loading state`() = runTest {
         chessStreamersViewModel = ChessStreamersViewModel(chessRepositoryImp)
 
         coEvery { chessRepositoryImp.getStreamers() } returns ResultCase.Success(MotherObject.streamersList.streamers)
@@ -59,7 +58,7 @@ class ChessStreamersViewModelTest {
             assertEquals(turbineStreamers.awaitItem(),listOf<StreamerModel>())
             assertTrue(turbineLoading.awaitItem())
             assertEquals(turbineError.awaitItem(),"")
-            advanceUntilIdle()
+
             assertEquals(turbineStreamers.awaitItem(), MotherObject.streamersList.streamers)
             assertFalse(turbineLoading.awaitItem())
 
@@ -72,7 +71,7 @@ class ChessStreamersViewModelTest {
     }
 
     @Test
-    fun `getStreamers WHEN error THEN updates leaderBoardLists and loading state`() = runTest {
+    fun `getStreamers WHEN error THEN updates error and loading state`() = runTest {
         chessStreamersViewModel = ChessStreamersViewModel(chessRepositoryImp)
 
         coEvery { chessRepositoryImp.getStreamers() } returns ResultCase.Error("Error: 404")
@@ -85,7 +84,7 @@ class ChessStreamersViewModelTest {
             assertEquals(turbineStreamers.awaitItem(),listOf<StreamerModel>())
             assertTrue(turbineLoading.awaitItem())
             assertEquals(turbineError.awaitItem(),"")
-            advanceUntilIdle()
+
             assertFalse(turbineLoading.awaitItem())
             assertEquals("Error: 404", turbineError.awaitItem())
 

@@ -14,7 +14,6 @@ import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -58,7 +57,7 @@ class LeaderBoardViewModelTest {
 
             assertTrue(turbineLoading.awaitItem())
             assertNull(turbineLeaderBoard.awaitItem())
-            advanceUntilIdle()
+
             assertFalse(turbineLoading.awaitItem())
             assertEquals(turbineLeaderBoard.awaitItem(), MotherObject.leaderboard)
 
@@ -83,7 +82,7 @@ class LeaderBoardViewModelTest {
             assertTrue(turbineLoading.awaitItem())
             assertNull(turbineLeaderBoard.awaitItem())
             assertEquals(turbineError.awaitItem(), "")
-            advanceUntilIdle()
+
             assertFalse(turbineLoading.awaitItem())
             assertEquals(turbineError.awaitItem(),"Error: 404")
 

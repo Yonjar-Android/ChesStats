@@ -44,7 +44,7 @@ class FirstScreenViewModelTest {
     }
 
     @Test
-    fun `searchPlayer WHEN successful THEN updates leaderBoardLists and loading state`() = runTest {
+    fun `searchPlayer WHEN successful THEN updates player and loading state`() = runTest {
         // Given
         val testPlayer = MotherObject.playerDomainTest
         val testCountry = MotherObject.country
@@ -67,12 +67,88 @@ class FirstScreenViewModelTest {
             assertTrue(turbineLoading.awaitItem())
             assertEquals(turbineError.awaitItem(), "")
 
-            advanceUntilIdle()
-
             // After loading completes
             assertFalse(turbineLoading.awaitItem())
             val updatedPlayer = turbinePlayer.awaitItem()
             assertEquals(updatedPlayer, testPlayer.copy(countryName = testCountry.name))
+
+            // Cancel turbines
+            turbinePlayer.cancel()
+            turbineLoading.cancel()
+            turbineError.cancel()
+        }
+
+        // Verify interactions
+        coVerify(exactly = 1) { chessRepositoryImp.getPlayerInfo("magnuscarlsen") }
+        coVerify(exactly = 1) { chessRepositoryImp.getCountryFromPlayer(testPlayer.country) }
+    }
+
+    @Test
+    fun `searchPlayer WHEN error THEN updates error and loading state`() = runTest {
+        // Given
+        val testPlayer = MotherObject.playerDomainTest
+        val testCountry = MotherObject.country
+
+        firstScreenViewModel = FirstScreenViewModel(chessRepositoryImp)
+
+        // Configura el mock para getPlayerInfo
+        coEvery { chessRepositoryImp.getPlayerInfo("magnuscarlsen") } returns ResultCase.Error("Error: 404")
+
+        // Configura el mock para getCountryFromPlayer con el país específico que esperas
+        coEvery { chessRepositoryImp.getCountryFromPlayer(testPlayer.country) } returns ResultCase.Success(testCountry)
+
+        turbineScope {
+            val turbinePlayer = firstScreenViewModel.player.testIn(backgroundScope)
+            val turbineLoading = firstScreenViewModel.loading.testIn(backgroundScope)
+            val turbineError = firstScreenViewModel.error.testIn(backgroundScope)
+
+            // Initial states
+            assertEquals(turbinePlayer.awaitItem(), null)
+            assertTrue(turbineLoading.awaitItem())
+            assertEquals(turbineError.awaitItem(), "")
+
+            // After loading completes
+            assertFalse(turbineLoading.awaitItem())
+            assertEquals(turbineError.awaitItem(),"Error: 404")
+
+            // Cancel turbines
+            turbinePlayer.cancel()
+            turbineLoading.cancel()
+            turbineError.cancel()
+        }
+
+        // Verify interactions
+        coVerify(exactly = 1) { chessRepositoryImp.getPlayerInfo("magnuscarlsen") }
+        coVerify(exactly = 0) { chessRepositoryImp.getCountryFromPlayer(testPlayer.country) }
+    }
+
+    @Test
+    fun `getCountry WHEN error THEN updates error and loading state`() = runTest {
+        // Given
+        val testPlayer = MotherObject.playerDomainTest
+
+        firstScreenViewModel = FirstScreenViewModel(chessRepositoryImp)
+
+        // Configura el mock para getPlayerInfo
+        coEvery { chessRepositoryImp.getPlayerInfo("magnuscarlsen") } returns ResultCase.Success(testPlayer)
+
+        // Configura el mock para getCountryFromPlayer con el país específico que esperas
+        coEvery { chessRepositoryImp.getCountryFromPlayer(testPlayer.country) } returns ResultCase.Error("Error: countryError")
+
+        turbineScope {
+            val turbinePlayer = firstScreenViewModel.player.testIn(backgroundScope)
+            val turbineLoading = firstScreenViewModel.loading.testIn(backgroundScope)
+            val turbineError = firstScreenViewModel.error.testIn(backgroundScope)
+
+            // Initial states
+            assertEquals(turbinePlayer.awaitItem(), null)
+            assertTrue(turbineLoading.awaitItem())
+            assertEquals(turbineError.awaitItem(), "")
+
+            // After loading completes
+            assertFalse(turbineLoading.awaitItem())
+            assertEquals(turbinePlayer.awaitItem(), testPlayer)
+            assertEquals(turbineError.awaitItem(),"Error: countryError")
 
             // Cancel turbines
             turbinePlayer.cancel()
