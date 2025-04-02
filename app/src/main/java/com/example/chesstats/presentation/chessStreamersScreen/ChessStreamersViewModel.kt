@@ -29,8 +29,8 @@ class ChessStreamersViewModel @Inject constructor(
     }
 
     private fun getStreamers() {
+        _loading.value = true
         viewModelScope.launch {
-            _loading.value = true
 
             val response = chessRepositoryImp.getStreamers()
 

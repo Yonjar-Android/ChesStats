@@ -2,7 +2,7 @@ package com.example.chesstats.presentation.leaderboardScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chesstats.data.models.ProfileDataModel
+import com.example.chesstats.data.models.LeaderBoardModel
 import com.example.chesstats.data.repositories.ChessRepositoryImp
 import com.example.chesstats.utils.ResultCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,9 +16,7 @@ class LeaderBoardViewModel @Inject constructor(
     private val chessRepositoryImp: ChessRepositoryImp
 ) : ViewModel() {
 
-    var blitzPlayers = MutableStateFlow<List<ProfileDataModel>?>(emptyList())
-    var rapidPlayers = MutableStateFlow<List<ProfileDataModel>?>(emptyList())
-    var bulletPlayers = MutableStateFlow<List<ProfileDataModel>?>(emptyList())
+    var leaderBoardLists = MutableStateFlow<LeaderBoardModel?>(null)
 
     private var _loading = MutableStateFlow<Boolean>(false)
     val loading: StateFlow<Boolean> = _loading
@@ -43,9 +41,7 @@ class LeaderBoardViewModel @Inject constructor(
                     }
                 }
                 is ResultCase.Success -> {
-                    blitzPlayers.value = leaderBoardResponse.data.blitz
-                    rapidPlayers.value = leaderBoardResponse.data.rapid
-                    bulletPlayers.value = leaderBoardResponse.data.bullet
+                    leaderBoardLists.value = leaderBoardResponse.data
                 }
             }
 

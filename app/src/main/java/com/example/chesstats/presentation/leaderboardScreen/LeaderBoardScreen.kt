@@ -65,9 +65,7 @@ fun SharedTransitionScope.LeaderBoardScreen(
 
     val context = LocalContext.current
 
-    val rapidPlayers by leaderBoardViewModel.rapidPlayers.collectAsStateWithLifecycle()
-    val blitzPlayers by leaderBoardViewModel.blitzPlayers.collectAsStateWithLifecycle()
-    val bulletPlayers by leaderBoardViewModel.bulletPlayers.collectAsStateWithLifecycle()
+    val leaderboard by leaderBoardViewModel.leaderBoardLists.collectAsStateWithLifecycle()
 
     val loading by leaderBoardViewModel.loading.collectAsStateWithLifecycle()
 
@@ -146,7 +144,7 @@ fun SharedTransitionScope.LeaderBoardScreen(
         when (selectedTab.intValue) {
             0 -> {
                 LeaderBoardModeScreen(
-                    rapidPlayers,
+                    leaderboard?.blitz,
                     controller,
                     animatedVisibilityScope = animatedVisibilityScope
                 )
@@ -154,7 +152,7 @@ fun SharedTransitionScope.LeaderBoardScreen(
 
             1 -> {
                 LeaderBoardModeScreen(
-                    blitzPlayers,
+                    leaderboard?.rapid,
                     controller,
                     animatedVisibilityScope = animatedVisibilityScope
                 )
@@ -162,7 +160,7 @@ fun SharedTransitionScope.LeaderBoardScreen(
 
             2 -> {
                 LeaderBoardModeScreen(
-                    bulletPlayers,
+                    leaderboard?.bullet,
                     controller,
                     animatedVisibilityScope = animatedVisibilityScope
                 )

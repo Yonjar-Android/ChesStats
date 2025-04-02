@@ -27,10 +27,7 @@ class FirstScreenViewModel @Inject constructor(
     val error: StateFlow<String> = _error
 
     init {
-        viewModelScope.launch {
             searchPlayer("magnuscarlsen")
-            chessRepositoryImp.getLeaderBoards()
-        }
     }
 
     fun searchPlayer(username: String) {
