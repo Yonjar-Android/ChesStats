@@ -11,6 +11,7 @@ import com.example.chesstats.data.models.ProfileDataModel
 import com.example.chesstats.data.models.streamers.StreamPlatform
 import com.example.chesstats.data.models.streamers.StreamerModel
 import com.example.chesstats.data.models.streamers.StreamerObjectAPI
+import com.example.chesstats.domain.models.PlayerDomainModel
 
 object MotherObject {
 
@@ -33,6 +34,17 @@ object MotherObject {
         lastOnline = null,
         joined = null,
         status = null
+    )
+
+    val playerDomainTest = PlayerDomainModel(
+        playerId = 10,
+        id = "10",
+        profileImage = "YonjarImage",
+        name = "Juan Centeno",
+        username = "Yonjar",
+        country = "UrlNicaragua",
+        countryName = "Nicaragua",
+        platforms = listOf()
     )
 
     private val chessRecord = ChessRecord(

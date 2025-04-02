@@ -14,8 +14,6 @@ import org.junit.Before
 import org.junit.Test
 import retrofit2.Response.success
 
-//import org.junit.jupiter.api.Assertions.*
-
 class ChessRepositoryImpTest {
 
     @MockK
