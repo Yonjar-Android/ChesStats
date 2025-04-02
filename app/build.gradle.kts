@@ -98,6 +98,8 @@ dependencies {
 
     testImplementation(libs.turbine)
 
+    testImplementation(libs.kotlinx.coroutines.test)
+
 }
 
 kapt {
