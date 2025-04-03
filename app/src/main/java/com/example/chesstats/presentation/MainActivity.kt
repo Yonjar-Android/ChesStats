@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -72,6 +73,7 @@ class MainActivity : ComponentActivity() {
                             containerColor = (Color(0XFF172734))
                         ) {
                             NavigationBarItem(
+                                modifier = Modifier.testTag("firstIconNavigation"),
                                 selected = selected == 0,
                                 colors = NavigationBarItemDefaults.colors(
                                     indicatorColor = Color(0XFF171434)
@@ -89,6 +91,7 @@ class MainActivity : ComponentActivity() {
                                 })
 
                             NavigationBarItem(
+                                modifier = Modifier.testTag("secondIconNavigation"),
                                 selected = selected == 1,
                                 colors = NavigationBarItemDefaults.colors(
                                     indicatorColor = Color(0XFF171434)
@@ -106,6 +109,7 @@ class MainActivity : ComponentActivity() {
                                 })
 
                             NavigationBarItem(
+                                modifier = Modifier.testTag("thirdIconNavigation"),
                                 selected = selected == 2,
                                 colors = NavigationBarItemDefaults.colors(
                                     indicatorColor = Color(0XFF171434)

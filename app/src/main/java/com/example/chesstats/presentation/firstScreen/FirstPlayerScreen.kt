@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -99,6 +102,7 @@ fun FirstPlayerScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color(0XFF223849))
+                    .testTag("searchTF")
                     // Ajusta el peso para centrar el TextField
                     .clip(RoundedCornerShape(20.dp))
                     .height(60.dp)
@@ -116,7 +120,7 @@ fun FirstPlayerScreen(
                 ),
                 trailingIcon = {
                     IconButton(
-                        modifier = Modifier
+                        modifier = Modifier.testTag("searchButton")
                             .padding(horizontal = 5.dp)
                             .clip(CircleShape),
                         onClick = {
@@ -176,6 +180,7 @@ fun PlayerProfileInfo(player: PlayerDomainModel?) {
                 .clickable {
                     showZoom = true
                 }
+                .testTag("profileImage")
         )
 
         if (showZoom) {

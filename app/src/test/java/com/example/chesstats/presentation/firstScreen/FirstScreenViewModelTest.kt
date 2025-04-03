@@ -2,7 +2,6 @@ package com.example.chesstats.presentation.firstScreen
 
 import app.cash.turbine.turbineScope
 import com.example.chesstats.MotherObject
-import com.example.chesstats.data.repositories.ChessRepositoryImp
 import com.example.chesstats.domain.repositories.ChessRepository
 import com.example.chesstats.utils.ResultCase
 import io.mockk.MockKAnnotations

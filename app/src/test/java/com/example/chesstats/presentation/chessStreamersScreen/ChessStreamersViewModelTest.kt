@@ -3,7 +3,6 @@ package com.example.chesstats.presentation.chessStreamersScreen
 import app.cash.turbine.turbineScope
 import com.example.chesstats.MotherObject
 import com.example.chesstats.data.models.streamers.StreamerModel
-import com.example.chesstats.data.repositories.ChessRepositoryImp
 import com.example.chesstats.domain.repositories.ChessRepository
 import com.example.chesstats.utils.ResultCase
 import io.mockk.MockKAnnotations
