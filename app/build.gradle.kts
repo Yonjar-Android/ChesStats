@@ -79,6 +79,9 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
 
+    androidTestImplementation(libs.androidx.navigation.testing)
+
+
     // Kotlinx serialization
     implementation(libs.kotlinx.serialization.json)
 
