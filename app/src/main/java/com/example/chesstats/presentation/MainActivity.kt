@@ -144,7 +144,10 @@ class MainActivity : ComponentActivity() {
 
                             // Pantalla B
                             composable<LeaderBoardScreenNav> {
-                                LeaderBoardScreen(leaderBoardViewModel, controller, this)
+                                LeaderBoardScreen(
+                                    leaderBoardViewModel, controller, this@composable,
+                                    sharedTransitionScope = this@SharedTransitionLayout
+                                )
                             }
 
                             composable<DetailPlayerScreenNav> { backstackEntry ->
@@ -154,7 +157,8 @@ class MainActivity : ComponentActivity() {
                                     detail.username,
                                     controller = controller,
                                     detailPlayerViewModel = detailPlayerViewModel,
-                                    animatedVisibilityScope = this
+                                    animatedVisibilityScope = this@composable,
+                                    sharedTransitionScope = this@SharedTransitionLayout
                                 )
                             }
 
@@ -163,7 +167,7 @@ class MainActivity : ComponentActivity() {
                                     chessStreamersViewModel,
                                     controller = controller,
                                     animatedVisibilityScope = this
-                                    )
+                                )
                             }
                         }
                     }

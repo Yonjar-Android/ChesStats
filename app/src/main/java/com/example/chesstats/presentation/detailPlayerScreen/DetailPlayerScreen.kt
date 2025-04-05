@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -57,11 +58,12 @@ import com.example.chesstats.presentation.extras.ZoomProfileScreen
 import com.example.chesstats.presentation.firstScreen.PlayerStatsInfo
 
 @Composable
-fun SharedTransitionScope.DetailPlayerScreen(
+fun DetailPlayerScreen(
     username: String,
     detailPlayerViewModel: DetailPlayerViewModel,
     controller: NavController,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    sharedTransitionScope: SharedTransitionScope
 ) {
     val player by detailPlayerViewModel.player.collectAsStateWithLifecycle()
 
@@ -84,7 +86,8 @@ fun SharedTransitionScope.DetailPlayerScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0XFF101B23))
-            .verticalScroll(state = rememberScrollState()),
+            .verticalScroll(state = rememberScrollState())
+            .testTag("DetailPlayerScreen"),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -102,7 +105,8 @@ fun SharedTransitionScope.DetailPlayerScreen(
         EditSpacer(15.dp)
 
         PlayerDetailProfileInfo(
-            player, animatedVisibilityScope = animatedVisibilityScope
+            player, animatedVisibilityScope = animatedVisibilityScope,
+            sharedTransitionScope = sharedTransitionScope
         )
 
         PlayerStatsInfo(player)
@@ -120,90 +124,93 @@ fun SharedTransitionScope.DetailPlayerScreen(
 }
 
 @Composable
-fun SharedTransitionScope.PlayerDetailProfileInfo(
+fun PlayerDetailProfileInfo(
     player: PlayerDomainModel?,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    sharedTransitionScope: SharedTransitionScope
 ) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(fraction = 0.9f)
-            .clip(RoundedCornerShape(20.dp))
-            .background(Color.Transparent)
-            .padding(vertical = 12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        var showZoom by remember { mutableStateOf(false) }
-
-        AsyncImage(
-            model = player?.profileImage,
-            contentDescription = "Profile Image",
-            contentScale = ContentScale.Crop,
+    with(sharedTransitionScope) {
+        Column(
             modifier = Modifier
-                .sharedElement(
-                    state = rememberSharedContentState(key = "image/${player?.username?.lowercase()}"),
-                    animatedVisibilityScope = animatedVisibilityScope,
-                    boundsTransform = { _, _ -> tween(durationMillis = 250) }
-                )
-                .size(150.dp)
-                .clip(CircleShape)
-                .border(width = 4.dp, color = Color.White, shape = CircleShape)
-                .clickable { showZoom = true }
-        )
-
-        if (showZoom) {
-            ZoomProfileScreen(player?.profileImage) { showZoom = false }
-        }
-
-        EditSpacer()
-
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth(fraction = 0.9f)
+                .clip(RoundedCornerShape(20.dp))
+                .background(Color.Transparent)
+                .padding(vertical = 12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                player?.name ?: "",
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                color = Color.White,
-                modifier = Modifier.sharedElement(
-                    state = rememberSharedContentState(key = "username/${player?.username?.lowercase()}"),
-                    animatedVisibilityScope = animatedVisibilityScope,
-                    boundsTransform = { _, _ -> tween(durationMillis = 250) }
-                )
+
+            var showZoom by remember { mutableStateOf(false) }
+
+            AsyncImage(
+                model = player?.profileImage,
+                contentDescription = "Profile Image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .sharedElement(
+                        state = rememberSharedContentState(key = "image/${player?.username?.lowercase()}"),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = { _, _ -> tween(durationMillis = 250) }
+                    )
+                    .size(150.dp)
+                    .clip(CircleShape)
+                    .border(width = 4.dp, color = Color.White, shape = CircleShape)
+                    .clickable { showZoom = true }
             )
 
-            if (player?.title != null) {
-                EditSpacer()
-
-                Text(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(5.dp))
-                        .background(Color(0XFFA62934))
-                        .padding(vertical = 2.dp, horizontal = 5.dp),
-                    text = player.title.name,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = Color.White,
-                )
+            if (showZoom) {
+                ZoomProfileScreen(player?.profileImage) { showZoom = false }
             }
-        }
 
-        Text(
-            text = "Username: ${player?.username}",
-            fontSize = 14.sp,
-            color = Color(0XFF8FB0CC),
-            textAlign = TextAlign.Center
-        )
+            EditSpacer()
 
-        if (player?.countryName?.isNotEmpty() == true){
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    player?.name ?: "",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.White,
+                    modifier = Modifier.sharedElement(
+                        state = rememberSharedContentState(key = "username/${player?.username?.lowercase()}"),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = { _, _ -> tween(durationMillis = 250) }
+                    )
+                )
+
+                if (player?.title != null) {
+                    EditSpacer()
+
+                    Text(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(5.dp))
+                            .background(Color(0XFFA62934))
+                            .padding(vertical = 2.dp, horizontal = 5.dp),
+                        text = player.title.name,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.White,
+                    )
+                }
+            }
+
             Text(
-                text = "${stringResource(R.string.country_str)} ${player.countryName}",
+                text = "Username: ${player?.username}",
                 fontSize = 14.sp,
                 color = Color(0XFF8FB0CC),
                 textAlign = TextAlign.Center
             )
+
+            if (player?.countryName?.isNotEmpty() == true) {
+                Text(
+                    text = "${stringResource(R.string.country_str)} ${player.countryName}",
+                    fontSize = 14.sp,
+                    color = Color(0XFF8FB0CC),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }

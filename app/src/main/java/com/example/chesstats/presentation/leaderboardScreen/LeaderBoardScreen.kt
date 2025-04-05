@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -57,10 +58,11 @@ import com.example.chesstats.presentation.extras.EditSpacer
 
 
 @Composable
-fun SharedTransitionScope.LeaderBoardScreen(
+fun LeaderBoardScreen(
     leaderBoardViewModel: LeaderBoardViewModel,
     controller: NavController,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    sharedTransitionScope: SharedTransitionScope
 ) {
 
     val context = LocalContext.current
@@ -71,15 +73,17 @@ fun SharedTransitionScope.LeaderBoardScreen(
 
     val error by leaderBoardViewModel.error.collectAsStateWithLifecycle()
 
-    val tabs = listOf<String>(stringResource(R.string.blitz_str),
+    val tabs = listOf<String>(
+        stringResource(R.string.blitz_str),
         stringResource(R.string.rapid_str),
-        stringResource(R.string.bullet_str))
+        stringResource(R.string.bullet_str)
+    )
 
     val selectedTab = remember { mutableIntStateOf(0) }
 
     LaunchedEffect(error) {
-        if (error.isNotEmpty()){
-            Toast.makeText(context,error, Toast.LENGTH_SHORT).show()
+        if (error.isNotEmpty()) {
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
             leaderBoardViewModel.cleanError()
         }
     }
@@ -88,11 +92,13 @@ fun SharedTransitionScope.LeaderBoardScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0XFF101B23))
+            .testTag("LeaderBoardScreen")
     ) {
         TabRow(
             modifier = Modifier
                 .padding(10.dp)
-                .clip(RoundedCornerShape(10.dp)),
+                .clip(RoundedCornerShape(10.dp))
+                .testTag("tabRowLeaderboard"),
             selectedTabIndex = selectedTab.intValue,
             containerColor = Color(0XFF223849),
             divider = {},
@@ -118,7 +124,8 @@ fun SharedTransitionScope.LeaderBoardScreen(
                             .padding(6.dp) // Padding entre tabs
                             .clip(RoundedCornerShape(8.dp)) // Bordes redondeados
                             .background(backgroundColor)
-                            .animateContentSize(),
+                            .animateContentSize()
+                            .testTag("tab$index"),
                         selected = selectedTab.intValue == index,
                         onClick = { selectedTab.intValue = index },
                         text = {
@@ -130,6 +137,7 @@ fun SharedTransitionScope.LeaderBoardScreen(
                     )
                 } else {
                     Tab(
+                        modifier = Modifier.testTag("tab$index"),
                         selected = selectedTab.intValue == index,
                         onClick = { selectedTab.intValue = index },
                         text = { Text(text = title, color = Color.White) }
@@ -146,7 +154,8 @@ fun SharedTransitionScope.LeaderBoardScreen(
                 LeaderBoardModeScreen(
                     leaderboard?.blitz,
                     controller,
-                    animatedVisibilityScope = animatedVisibilityScope
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    sharedTransitionScope = sharedTransitionScope
                 )
             }
 
@@ -154,7 +163,8 @@ fun SharedTransitionScope.LeaderBoardScreen(
                 LeaderBoardModeScreen(
                     leaderboard?.rapid,
                     controller,
-                    animatedVisibilityScope = animatedVisibilityScope
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    sharedTransitionScope = sharedTransitionScope
                 )
             }
 
@@ -162,7 +172,8 @@ fun SharedTransitionScope.LeaderBoardScreen(
                 LeaderBoardModeScreen(
                     leaderboard?.bullet,
                     controller,
-                    animatedVisibilityScope = animatedVisibilityScope
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    sharedTransitionScope = sharedTransitionScope
                 )
             }
         }
@@ -176,21 +187,24 @@ fun SharedTransitionScope.LeaderBoardScreen(
 }
 
 @Composable
-fun SharedTransitionScope.LeaderBoardModeScreen(
+fun LeaderBoardModeScreen(
     players: List<ProfileDataModel>?,
     controller: NavController,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    sharedTransitionScope: SharedTransitionScope
 ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
+            .testTag("leaderBoardScreen")
     ) {
         players?.let {
             items(players) {
                 PlayerRankItem(
                     it,
                     controller = controller,
-                    animatedVisibilityScope = animatedVisibilityScope
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    sharedTransitionScope = sharedTransitionScope
                 )
                 EditSpacer()
             }
@@ -199,72 +213,75 @@ fun SharedTransitionScope.LeaderBoardModeScreen(
 }
 
 @Composable
-fun SharedTransitionScope.PlayerRankItem(
+fun PlayerRankItem(
     player: ProfileDataModel,
     controller: NavController,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    sharedTransitionScope: SharedTransitionScope
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp)
-            .clickable {
-                controller.navigate(DetailPlayerScreenNav(player.username!!))
-            },
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    with(sharedTransitionScope) {
         Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
+                .clickable {
+                    controller.navigate(DetailPlayerScreenNav(player.username!!))
+                }
+                .testTag("playerProfile${player.rank}"),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
-            AsyncImage(
-                model = player.avatar,
-                contentDescription = "profile picture",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .sharedElement(
-                        state = rememberSharedContentState(key = "image/${player.username?.lowercase()}"),
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        boundsTransform = { _, _ -> tween(durationMillis = 250) }
-                    )
-                    .size(65.dp)
-                    .clip(CircleShape)
-                    .border(width = 1.dp, color = Color.White, shape = CircleShape)
-            )
-
-            EditSpacer()
-
-            Column {
-
-                Text(
-                    text = player.name.takeUnless { it.isNullOrEmpty() } ?: player.username ?: "",
-                    fontSize = 16.sp,
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.sharedElement(
-                        state = rememberSharedContentState(key = "username/${player.username?.lowercase()}"),
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        boundsTransform = { _, _ ->
-                            tween(durationMillis = 250)
-                        }
-                    )
+                AsyncImage(
+                    model = player.avatar,
+                    contentDescription = "profile picture",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .sharedElement(
+                            state = rememberSharedContentState(key = "image/${player.username?.lowercase()}"),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            boundsTransform = { _, _ -> tween(durationMillis = 250) }
+                        )
+                        .size(65.dp)
+                        .clip(CircleShape)
+                        .border(width = 1.dp, color = Color.White, shape = CircleShape)
                 )
 
-                EditSpacer(2.dp)
+                EditSpacer()
 
-                Text(
-                    text = "${player.score}",
-                    fontSize = 14.sp,
-                    color = Color(0XFF8FB0CC),
-                    textAlign = TextAlign.Center
-                )
+                Column {
 
+                    Text(
+                        text = player.name.takeUnless { it.isNullOrEmpty() } ?: player.username
+                        ?: "",
+                        fontSize = 16.sp,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.sharedElement(
+                            state = rememberSharedContentState(key = "username/${player.username?.lowercase()}"),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            boundsTransform = { _, _ ->
+                                tween(durationMillis = 250)
+                            }
+                        )
+                    )
+
+                    EditSpacer(2.dp)
+
+                    Text(
+                        text = "${player.score}",
+                        fontSize = 14.sp,
+                        color = Color(0XFF8FB0CC),
+                        textAlign = TextAlign.Center
+                    )
+
+                }
             }
+            Text("#${player.rank}", fontSize = 16.sp, color = Color.White)
         }
-        Text("#${player.rank}", fontSize = 16.sp, color = Color.White)
-
     }
-
 }
