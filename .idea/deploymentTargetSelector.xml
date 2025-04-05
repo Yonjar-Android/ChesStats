@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="MainActivityTest">
+      <SelectionState runConfigName="screenChargeCorrectly() (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="chargeScreenAndNavigateToPlayerRank1()">
+      <SelectionState runConfigName="streamersScreenChargeCorrectly()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="LeaderBoardScreenKtTest">
+      <SelectionState runConfigName="clickOnTwitchOrYoutubeIcons()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="screenChargeCorrectly()">
+      <SelectionState runConfigName="ChessStreamersScreenKtTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="navigateThroughTabRow()">
+      <SelectionState runConfigName="clickOnYoutubeIcons()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

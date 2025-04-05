@@ -166,7 +166,8 @@ class MainActivity : ComponentActivity() {
                                 ChessStreamersScreen(
                                     chessStreamersViewModel,
                                     controller = controller,
-                                    animatedVisibilityScope = this
+                                    animatedVisibilityScope = this@composable,
+                                    sharedTransitionScope = this@SharedTransitionLayout
                                 )
                             }
                         }

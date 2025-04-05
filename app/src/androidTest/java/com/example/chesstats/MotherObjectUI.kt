@@ -76,8 +76,8 @@ object MotherObjectUI {
         avatar = "AnnaImage",
         platforms = listOf(
             StreamPlatform(
-                platformName = "Twitch",
-                channelUrl = "TwitchAnna",
+                platformName = "twitch",
+                channelUrl = "TwitchAnnaCramling",
                 isLive = true
             )
         ),
@@ -90,8 +90,8 @@ object MotherObjectUI {
         avatar = "GothamImage",
         platforms = listOf(
             StreamPlatform(
-                platformName = "Twitch",
-                channelUrl = "TwitchGotham",
+                platformName = "youtube",
+                channelUrl = "YoutubeGothamChess",
                 isLive = true
             )
         ),

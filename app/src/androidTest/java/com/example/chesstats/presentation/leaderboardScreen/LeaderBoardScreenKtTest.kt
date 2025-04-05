@@ -114,14 +114,12 @@ class LeaderBoardScreenKtTest {
                             enter = fadeIn(),
                             exit = fadeOut()
                         ) {
-                            Box(Modifier.windowInsetsPadding(WindowInsets.statusBars)) {
                                 LeaderBoardScreen(
                                     viewModel,
                                     sharedTransitionScope = this@SharedTransitionLayout,
                                     animatedVisibilityScope = this@AnimatedVisibility,
                                     controller = controller
                                 )
-                            }
                         }
                     }
                 }

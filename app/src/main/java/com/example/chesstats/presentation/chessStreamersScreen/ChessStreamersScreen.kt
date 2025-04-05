@@ -41,6 +41,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -56,11 +57,12 @@ import com.example.chesstats.presentation.extras.DetailPlayerScreenNav
 import com.example.chesstats.presentation.extras.EditSpacer
 
 @Composable
-fun SharedTransitionScope.ChessStreamersScreen(
+fun ChessStreamersScreen(
     chessStreamersViewModel:
     ChessStreamersViewModel,
     controller: NavController,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    sharedTransitionScope: SharedTransitionScope
 ) {
     val streamers by chessStreamersViewModel.streamers.collectAsStateWithLifecycle()
 
@@ -71,8 +73,8 @@ fun SharedTransitionScope.ChessStreamersScreen(
     val context = LocalContext.current
 
     LaunchedEffect(error) {
-        if (error.isNotEmpty()){
-            Toast.makeText(context,error, Toast.LENGTH_SHORT).show()
+        if (error.isNotEmpty()) {
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
             chessStreamersViewModel.cleanError()
         }
     }
@@ -80,7 +82,8 @@ fun SharedTransitionScope.ChessStreamersScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0XFF101B23)),
+            .background(Color(0XFF101B23))
+            .testTag("ChessStreamersScreen"),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         EditSpacer()
@@ -89,9 +92,12 @@ fun SharedTransitionScope.ChessStreamersScreen(
 
         EditSpacer(20.dp)
 
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier.testTag("streamersList")
+        ) {
             items(streamers) { streamer ->
-                SteamerItem(streamer, controller, animatedVisibilityScope)
+                SteamerItem(streamer, controller, animatedVisibilityScope,
+                    sharedTransitionScope = sharedTransitionScope)
 
                 EditSpacer()
             }
@@ -103,136 +109,143 @@ fun SharedTransitionScope.ChessStreamersScreen(
 }
 
 @Composable
-fun SharedTransitionScope.SteamerItem(
+fun SteamerItem(
     streamer: StreamerModel?,
     controller: NavController,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    sharedTransitionScope: SharedTransitionScope
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var selectedUrl by remember { mutableStateOf("") }
 
     val uriHandler = LocalUriHandler.current
+    with(sharedTransitionScope) {
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(fraction = 0.95f)
-            .clickable {
-                controller.navigate(DetailPlayerScreenNav(streamer?.username!!))
-            },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier
+                .fillMaxWidth(fraction = 0.95f)
+                .clickable {
+                    controller.navigate(DetailPlayerScreenNav(streamer?.username!!))
+                }
+                .testTag("streamer${streamer?.username}"),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            AsyncImage(
-                model = streamer?.avatar,
-                contentDescription = "profile picture",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .sharedElement(
-                        state = rememberSharedContentState(key = "image/${streamer?.username?.lowercase()}"),
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        boundsTransform = { _, _ -> tween(durationMillis = 250) }
-                    )
-                    .size(65.dp)
-                    .clip(CircleShape)
-                    .border(width = 1.dp, color = Color.White, shape = CircleShape)
-            )
-
-            EditSpacer()
-
-            Column {
-
-                Text(
-                    text = streamer?.username ?: "",
-                    fontSize = 16.sp,
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.sharedElement(
-                        state = rememberSharedContentState(key = "username/${streamer?.username?.lowercase()}"),
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        boundsTransform = { _, _ -> tween(durationMillis = 250) }
-                    )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                AsyncImage(
+                    model = streamer?.avatar,
+                    contentDescription = "profile picture",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .sharedElement(
+                            state = rememberSharedContentState(key = "image/${streamer?.username?.lowercase()}"),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            boundsTransform = { _, _ -> tween(durationMillis = 250) }
+                        )
+                        .size(65.dp)
+                        .clip(CircleShape)
+                        .border(width = 1.dp, color = Color.White, shape = CircleShape)
                 )
 
-                EditSpacer(2.dp)
+                EditSpacer()
 
-                if (streamer?.platforms?.isNotEmpty() == true) {
+                Column {
+
+                    Text(
+                        text = streamer?.username ?: "",
+                        fontSize = 16.sp,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.sharedElement(
+                            state = rememberSharedContentState(key = "username/${streamer?.username?.lowercase()}"),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            boundsTransform = { _, _ -> tween(durationMillis = 250) }
+                        )
+                    )
+
+                    EditSpacer(2.dp)
+
+                    if (streamer?.platforms?.isNotEmpty() == true) {
+                        for (i in streamer.platforms) {
+                            Row {
+                                Text(i.platformName?.replaceFirstChar { it.uppercase() } ?: "",
+                                    color = Color.White)
+
+                                EditSpacer(5.dp)
+
+                                if (i.isLive == true) {
+                                    Text("Live", color = Color.Green)
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            if (streamer?.platforms?.isNotEmpty() == true) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     for (i in streamer.platforms) {
-                        Row {
-                            Text(i.platformName?.replaceFirstChar { it.uppercase() } ?: "",
-                                color = Color.White)
-
-                            EditSpacer(5.dp)
-
-                            if (i.isLive == true) {
-                                Text("Live", color = Color.Green)
+                        if (i.platformName == "twitch") {
+                            IconButton( modifier = Modifier.testTag("twitch${streamer.username}"),
+                                onClick = {
+                                    selectedUrl = i.channelUrl ?: ""
+                                    showDialog = true
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.twitch),
+                                    contentDescription = "Twitch icon",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(23.dp)
+                                )
                             }
-                        }
 
+                        } else if (i.platformName == "youtube") {
+                            IconButton(
+                                modifier = Modifier.testTag("youtube${streamer.username}"),
+                                onClick = {
+                                    selectedUrl = i.channelUrl ?: ""
+                                    showDialog = true
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.youtube),
+                                    contentDescription = "Youtube icon",
+                                    tint = Color.White,
+                                    modifier = Modifier.height(30.dp)
+                                )
+                            }
+
+                        }
                     }
                 }
             }
         }
 
-        if (streamer?.platforms?.isNotEmpty() == true) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                for (i in streamer.platforms) {
-                    if (i.platformName == "twitch") {
-                        IconButton(
-                            onClick = {
-                                selectedUrl = i.channelUrl ?: ""
-                                showDialog = true
-                            }
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.twitch),
-                                contentDescription = "Twitch icon",
-                                tint = Color.White,
-                                modifier = Modifier.size(23.dp)
-                            )
-                        }
-
-                    } else if (i.platformName == "youtube") {
-                        IconButton(
-                            onClick = {
-                                selectedUrl = i.channelUrl ?: ""
-                                showDialog = true
-                            }
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.youtube),
-                                contentDescription = "Youtube icon",
-                                tint = Color.White,
-                                modifier = Modifier.height(30.dp)
-                            )
-                        }
-
-                    }
-                }
-            }
+        if (showDialog) {
+            OpenLinkDialog(
+                selectedUrl, uriHandler,
+                closeDialog = {
+                    showDialog = false
+                })
         }
-    }
-
-    if (showDialog) {
-        OpenLinkDialog(
-            selectedUrl, uriHandler,
-            closeDialog = {
-                showDialog = false
-            })
     }
 }
 
 @Composable
 fun OpenLinkDialog(url: String, uriHandler: UriHandler, closeDialog: () -> Unit) {
     AlertDialog(
+        modifier = Modifier.testTag("AlertDialogChannel"),
         onDismissRequest = { },
         title = { Text("¿Abrir enlace externo?") },
         text = { Text("Serás redirigido a $url") },
         confirmButton = {
             Button(
+                modifier = Modifier.testTag("confirmBtn"),
                 onClick = {
                     closeDialog()
                     uriHandler.openUri(url)
@@ -242,7 +255,9 @@ fun OpenLinkDialog(url: String, uriHandler: UriHandler, closeDialog: () -> Unit)
             }
         },
         dismissButton = {
+
             TextButton(
+                modifier = Modifier.testTag("cancelBtn"),
                 onClick = { closeDialog() }
             ) {
                 Text("Cancelar")
