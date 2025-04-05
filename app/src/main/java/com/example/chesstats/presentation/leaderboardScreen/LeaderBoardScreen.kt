@@ -26,12 +26,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -91,7 +91,7 @@ fun LeaderBoardScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0XFF101B23))
+            .background(MaterialTheme.colorScheme.background)
             .testTag("LeaderBoardScreen")
     ) {
         TabRow(
@@ -247,7 +247,11 @@ fun PlayerRankItem(
                         )
                         .size(65.dp)
                         .clip(CircleShape)
-                        .border(width = 1.dp, color = Color.White, shape = CircleShape)
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            shape = CircleShape
+                        )
                 )
 
                 EditSpacer()
@@ -258,7 +262,7 @@ fun PlayerRankItem(
                         text = player.name.takeUnless { it.isNullOrEmpty() } ?: player.username
                         ?: "",
                         fontSize = 16.sp,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.sharedElement(
@@ -275,13 +279,17 @@ fun PlayerRankItem(
                     Text(
                         text = "${player.score}",
                         fontSize = 14.sp,
-                        color = Color(0XFF8FB0CC),
+                        color = MaterialTheme.colorScheme.primary,
                         textAlign = TextAlign.Center
                     )
 
                 }
             }
-            Text("#${player.rank}", fontSize = 16.sp, color = Color.White)
+            Text(
+                "#${player.rank}", fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.SemiBold
+            )
         }
     }
 }

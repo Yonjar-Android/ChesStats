@@ -26,10 +26,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -85,7 +85,7 @@ fun DetailPlayerScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0XFF101B23))
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(state = rememberScrollState())
             .testTag("DetailPlayerScreen"),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -97,7 +97,7 @@ fun DetailPlayerScreen(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "arrow Back",
-                    tint = Color.White, modifier = Modifier.size(30.dp)
+                    tint = MaterialTheme.colorScheme.onSurface, modifier = Modifier.size(30.dp)
                 )
             }
         }
@@ -154,7 +154,11 @@ fun PlayerDetailProfileInfo(
                     )
                     .size(150.dp)
                     .clip(CircleShape)
-                    .border(width = 4.dp, color = Color.White, shape = CircleShape)
+                    .border(
+                        width = 4.dp,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        shape = CircleShape
+                    )
                     .clickable { showZoom = true }
             )
 
@@ -172,7 +176,7 @@ fun PlayerDetailProfileInfo(
                     player?.name ?: "",
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.sharedElement(
                         state = rememberSharedContentState(key = "username/${player?.username?.lowercase()}"),
                         animatedVisibilityScope = animatedVisibilityScope,
@@ -191,7 +195,7 @@ fun PlayerDetailProfileInfo(
                         text = player.title.name,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
             }
@@ -199,7 +203,7 @@ fun PlayerDetailProfileInfo(
             Text(
                 text = "Username: ${player?.username}",
                 fontSize = 14.sp,
-                color = Color(0XFF8FB0CC),
+                color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center
             )
 
@@ -207,7 +211,7 @@ fun PlayerDetailProfileInfo(
                 Text(
                     text = "${stringResource(R.string.country_str)} ${player.countryName}",
                     fontSize = 14.sp,
-                    color = Color(0XFF8FB0CC),
+                    color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center
                 )
             }

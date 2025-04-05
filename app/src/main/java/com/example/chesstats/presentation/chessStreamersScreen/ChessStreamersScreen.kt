@@ -24,11 +24,11 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -82,13 +82,18 @@ fun ChessStreamersScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0XFF101B23))
+            .background(MaterialTheme.colorScheme.background)
             .testTag("ChessStreamersScreen"),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         EditSpacer()
 
-        Text("Streamers", color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.Bold)
+        Text(
+            "Streamers",
+            color = MaterialTheme.colorScheme.onSurface,
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold
+        )
 
         EditSpacer(20.dp)
 
@@ -96,8 +101,10 @@ fun ChessStreamersScreen(
             modifier = Modifier.testTag("streamersList")
         ) {
             items(streamers) { streamer ->
-                SteamerItem(streamer, controller, animatedVisibilityScope,
-                    sharedTransitionScope = sharedTransitionScope)
+                SteamerItem(
+                    streamer, controller, animatedVisibilityScope,
+                    sharedTransitionScope = sharedTransitionScope
+                )
 
                 EditSpacer()
             }
@@ -146,7 +153,11 @@ fun SteamerItem(
                         )
                         .size(65.dp)
                         .clip(CircleShape)
-                        .border(width = 1.dp, color = Color.White, shape = CircleShape)
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            shape = CircleShape
+                        )
                 )
 
                 EditSpacer()
@@ -156,7 +167,7 @@ fun SteamerItem(
                     Text(
                         text = streamer?.username ?: "",
                         fontSize = 16.sp,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.sharedElement(
@@ -172,12 +183,16 @@ fun SteamerItem(
                         for (i in streamer.platforms) {
                             Row {
                                 Text(i.platformName?.replaceFirstChar { it.uppercase() } ?: "",
-                                    color = Color.White)
+                                    color = MaterialTheme.colorScheme.onSurface)
 
                                 EditSpacer(5.dp)
 
                                 if (i.isLive == true) {
-                                    Text("Live", color = Color.Green)
+                                    Text(
+                                        "Live", color = if (
+                                            MaterialTheme.colorScheme.onSurface == Color.White) Color.Green
+                                        else Color(0XFF21B82E)
+                                    )
                                 }
                             }
 
@@ -190,7 +205,8 @@ fun SteamerItem(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     for (i in streamer.platforms) {
                         if (i.platformName == "twitch") {
-                            IconButton( modifier = Modifier.testTag("twitch${streamer.username}"),
+                            IconButton(
+                                modifier = Modifier.testTag("twitch${streamer.username}"),
                                 onClick = {
                                     selectedUrl = i.channelUrl ?: ""
                                     showDialog = true
@@ -199,7 +215,7 @@ fun SteamerItem(
                                 Icon(
                                     painter = painterResource(R.drawable.twitch),
                                     contentDescription = "Twitch icon",
-                                    tint = Color.White,
+                                    tint = MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.size(23.dp)
                                 )
                             }
@@ -215,7 +231,7 @@ fun SteamerItem(
                                 Icon(
                                     painter = painterResource(R.drawable.youtube),
                                     contentDescription = "Youtube icon",
-                                    tint = Color.White,
+                                    tint = MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.height(30.dp)
                                 )
                             }

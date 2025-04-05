@@ -24,7 +24,7 @@ import coil3.compose.AsyncImage
 fun ZoomProfileScreen(
     image: String?,
     closeDialog: () -> Unit
-){
+) {
     Dialog(
         onDismissRequest = { closeDialog.invoke() },
         properties = DialogProperties(usePlatformDefaultWidth = false)

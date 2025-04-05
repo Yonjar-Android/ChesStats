@@ -9,14 +9,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,11 +22,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -71,14 +67,15 @@ fun FirstPlayerScreen(
     val context = LocalContext.current
 
     if (error.isNotEmpty()) {
-            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-            hiltViewModel.cleanError() }
+        Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+        hiltViewModel.cleanError()
+    }
 
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0XFF101B23))
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(state = rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -120,7 +117,8 @@ fun FirstPlayerScreen(
                 ),
                 trailingIcon = {
                     IconButton(
-                        modifier = Modifier.testTag("searchButton")
+                        modifier = Modifier
+                            .testTag("searchButton")
                             .padding(horizontal = 5.dp)
                             .clip(CircleShape),
                         onClick = {
@@ -176,7 +174,7 @@ fun PlayerProfileInfo(player: PlayerDomainModel?) {
             modifier = Modifier
                 .size(160.dp)
                 .clip(CircleShape)
-                .border(width = 4.dp, color = Color.White, shape = CircleShape)
+                .border(width = 4.dp, color = MaterialTheme.colorScheme.onSurface, shape = CircleShape)
                 .clickable {
                     showZoom = true
                 }
@@ -197,7 +195,7 @@ fun PlayerProfileInfo(player: PlayerDomainModel?) {
                 player?.name ?: "",
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                color = Color.White
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             if (player?.title != null) {
@@ -219,15 +217,15 @@ fun PlayerProfileInfo(player: PlayerDomainModel?) {
         Text(
             text = "${stringResource(R.string.username_str)} ${player?.username}",
             fontSize = 14.sp,
-            color = Color(0XFF8FB0CC),
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
 
-        if (player?.countryName?.isNotEmpty() == true){
+        if (player?.countryName?.isNotEmpty() == true) {
             Text(
                 text = "${stringResource(R.string.country_str)} ${player.countryName}",
                 fontSize = 14.sp,
-                color = Color(0XFF8FB0CC),
+                color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center
             )
         }
@@ -246,7 +244,8 @@ fun PlayerStatsInfo(player: PlayerDomainModel?) {
 
         Text(
             "Stats",
-            color = Color.White, fontSize = 20.sp,
+            color = MaterialTheme.colorScheme.onSurface,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
     }
@@ -293,7 +292,7 @@ fun PlayerStatsInfo(player: PlayerDomainModel?) {
                 Text(
                     text = "${stringResource(player.title.titled)} (${player.title.name})",
                     fontSize = 16.sp,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -332,7 +331,7 @@ fun TextRating(chessMode: String, stats: ModeStats?) {
         Text(
             text = "${stats?.last} ( Best: ${stats?.best} )",
             fontSize = 16.sp,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.SemiBold
         )
@@ -346,7 +345,7 @@ fun TextRating(chessMode: String, stats: ModeStats?) {
                 )
             } ${stats?.draws}, ${stringResource(R.string.losses_str)} ${stats?.losses} )",
             fontSize = 14.sp,
-            color = Color(0XFF8FB0CC),
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
 
